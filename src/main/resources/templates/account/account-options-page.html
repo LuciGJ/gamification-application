@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+	integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+	crossorigin="anonymous">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+
+<title>Account management</title>
+
+</head>
+
+<body>
+	<div style="margin-left: 35%; margin-top: 5%;"
+		class="mainbox col-md-2 col-md-offset-1 col-sm-5 col-sm-offset-1 border border-black bg-success">
+
+
+		<hr>
+		<a class="btn btn-primary col-10" th:href="@{/account/changeEmail}">Change
+			email</a> <br>
+		<br> <a class="btn btn-primary col-10"
+			th:href="@{/account/changePassword}">Change password</a> <br>
+		<br> <a class="btn btn-primary col-10"
+			th:href="@{/account/deleteAccount}">Delete account</a> <br>
+		<br> <a class="btn btn-primary col-10" th:href="@{/menu}">Back
+			to menu</a>
+
+
+
+		</form>
+	</div>
+</body>
+</html>

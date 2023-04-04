@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<link rel="stylesheet" th:href="@{/css/style.css}">
+
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<title>Home</title>
+</head>
+
+<body>
+	<div>
+	<!-- loginbox containing a welcome message and two buttons, for registration and login -->
+	
+		<div id="loginbox" style="margin-top: 10%; margin-left: 35%"
+			class="mainbox col-md-3 col-md-offset-2 col-sm-6 col-sm-offset-2">
+
+			<div class="panel panel-primary">
+
+				<div class="panel panel-body">
+					<h2 class="font-weight-bold">Welcome to Gamification!</h2>
+					<a class="btn btn-success col-10" th:href="@{/login}">Sign in</a> 
+					<a class="btn btn-success col-10"
+						th:href="@{/register/registrationForm}">Create a new account</a>
+				</div>
+			</div>
+		</div>
+</body>
+
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+
+
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+	integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+	crossorigin="anonymous">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+
+<title>Menu</title>
+
+</head>
+
+<body>
+	<div style="margin-left: 35%; margin-top: 5%;"
+		class="mainbox col-md-2 col-md-offset-1 col-sm-5 col-sm-offset-1 border border-black bg-light">
+		<!-- welcome message which gets the username from Spring Security-->
+		
+		<h3 class="font-weight-bold">
+			Welcome, <span sec:authentication="name"></span>
+		</h3>
+
+		<hr>
+<!-- button for admins only-->
+
+		<div sec:authorize="hasRole('ROLE_ADMIN')">
+
+			<a class="btn btn-success col-10"
+				th:href="@{/admin/administrationPage}">Administrator page</a> <br>
+			<br>
+
+		</div>
+
+		<a class="btn btn-success col-10" th:href="@{/account/listOptions}">Manage
+			account</a> <br>
+		<br> <a class="btn btn-success col-10"
+			th:href="@{/userdata/listDetail}">Profile</a> <br>
+		<br> <a class="btn btn-success col-10"
+			th:href="@{/quest/displayQuests}">Quests</a> <br>
+		<br> <a class="btn btn-success col-10"
+			th:href="@{/leaderboard/displayLeaderboard}">Leaderboard</a> <br>
+		
+		<form action="#" th:action="@{/logout}" method="POST">
+
+			<input type="submit" value="Logout"
+				class="btn btn-outline-primary mt-2" />
+
+		</form>
+	</div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Picture</title>
+
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+	<div style="margin-left: 20%; margin-top: 5%;"
+		class="mainbox col-md-7 col-md-offset-6 col-sm-10 col-sm-offset-6 border border-black bg-success">
+		<img class="border border-black" width="350" height="350"
+			th:src="@{'/user-photos/' + ${userDetail.image}}" />
+
+		<h2>Upload picture</h2>
+<!-- display errors -->
+		<div th:if="${imageError}" class="alert alert-danger col-xs-10">
+			<span th:text="${imageError}"></span>
+		</div>
+<!-- Form to upload the picture -->
+		<form th:action="@{/userdata/uploadPicture}" th:object="${userDetail}"
+			method="post" enctype="multipart/form-data">
+			<div>
+
+				<hr>
+
+				<br> <br> <input type="file" name="image"
+					accept="image/png, image/jpeg" />
+				<hr>
+				<button type="submit" class="btn btn-primary col-2">Upload</button>
+				<a class="btn btn-primary col-2" th:href="@{/userdata/listDetail}">Done</a>
+			</div>
+
+			<br>
+
+
+
+		</form>
+	</div>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+	integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+	crossorigin="anonymous">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<title>Edit details</title>
+</head>
+
+<body>
+
+	<div class="container">
+
+		<div style="margin-left: 20%; margin-top: 5%;"
+			class="mainbox col-md-7 col-md-offset-6 col-sm-10 col-sm-offset-6 border border-black bg-success">
+			<p class="h4 mb-4 font-weight-bold text-light">Profile</p>
+<!-- form to update profile information -->
+			<form th:action="@{/userdata/updateDetail}" th:object="${userDetail}"
+				method="POST">
+				<!--  display errors  -->
+<div th:if="${message}">
+					<h2 style="color: red;" th:text="${message}"></h2>
+				</div>
+<!-- hidden id and image in order to not lose them -->
+				<input type="hidden" th:field="*{id}" /> <input type="hidden"
+					th:field="*{image}" /> <input type="text" maxlength="50"
+					th:field="*{displayName}" class="form-control mb-4 col-4"
+					placeholder="Display name"/>
+				<textarea rows="5" cols="33" maxlength="1000"
+					th:field="*{description}">
+			    Description 
+			  </textarea>
+				<br>
+				<button type="submit" class="btn btn-primary col-2">Save</button>
+
+			</form>
+
+			<hr>
+			<a class="font-weight-bold text-light"
+				th:href="@{/userdata/listDetail}">Back to profile</a>
+
+		</div>
+	</div>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+

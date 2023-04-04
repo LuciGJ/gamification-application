@@ -1,0 +1,11 @@
+body{
+  background-image: url(/img/controller.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  }
+
+hr{
+   height: 1px;
+   background-color: white;
+   border: none;
+   }

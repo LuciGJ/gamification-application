@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+	integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+	crossorigin="anonymous">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<title>Administration page</title>
+</head>
+
+<body>
+
+	<div class="container border border-black bg-success"
+		style="margin-top: 5%;">
+
+		<h3 class="font-weight-bold text-light">Accounts</h3>
+		<hr>
+<!-- form to search the users list-->
+		<form th:action="@{/admin/search}" class="form-inline">
+
+			<input class="form-control ml-1 mr-sm-2 mb-3" type="search"
+				name="username" placeholder="Search by username" />
+
+			<button class="btn btn-primary mb-3" type="submit">Search</button>
+		</form>
+
+<!-- table to display accounts and actions-->
+		<table class="table table-bordered table-striped">
+			<thead class="thead-light">
+				<tr>
+					<th >Id</th>
+					<th>Username</th>
+					<th>Active</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr th:each="user : ${users}">
+
+					<td class="font-weight-bold text-light" th:text="${user.id}" />
+					<td class="font-weight-bold text-light" th:text="${user.username}" />
+					<td class="font-weight-bold text-light" th:text="${user.enabled eq 1} ? 'true' : 'false'" />
+
+<!-- if user is suspended show options to unsuspend, else show option to suspend-->
+					<td>
+						<div th:if="${user.suspended} eq 0">
+							<a th:href="@{/admin/suspendUser(userId=${user.id})}"
+								class="btn btn-warning btn-sm"
+								onclick="if (!(confirm('Are you sure you want to suspend this user?'))) return false">
+								Suspend </a>
+						</div>
+
+						<div th:unless="${user.suspended} eq 0">
+							<a th:href="@{/admin/suspendUser(userId=${user.id})}"
+								class="btn btn-primary btn-sm"
+								onclick="if (!(confirm('Are you sure you want to unsuspend this user?'))) return false">
+								Unsuspend </a>
+						</div> <a th:href="@{/admin/deleteUser(userId=${user.id})}"
+						class="btn btn-danger btn-sm"
+						onclick="if (!(confirm('Are you sure you want to delete this user?'))) return false">
+							Delete </a>
+					</td>
+
+					</div>
+
+				</tr>
+			</tbody>
+		</table>
+		<hr>
+		<a class="font-weight-bold text-light" th:href="@{/menu}">Back to menu</a>
+
+	</div>
+
+</body>
+</html>
+
+
+

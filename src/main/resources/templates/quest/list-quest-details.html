@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+	integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+	crossorigin="anonymous">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+
+
+<title>Quest</title>
+</head>
+
+<body>
+
+	<div style="margin-left: 20%; margin-top: 5%;"
+		class="mainbox col-md-7 col-md-offset-6 col-sm-10 col-sm-offset-6 border border-black bg-success">
+<!-- Display quest information -->
+
+
+		
+		<p class="font-weight-bold text-light"
+			th:text="${quest.name}"></p>
+		<p class="font-weight-bold text-light"
+			th:text="${quest.description}"></p>
+		<p class="font-weight-bold text-light"
+			th:text="${quest.badgeId != null} ? 'This quest rewards a badge' : 'This quest does not reward a badge'"></p>
+		<p class="font-weight-bold text-light" 
+			th:text="'Tokens: ' + ${quest.tokens}"/>
+
+		<a class="text-light" th:href="@{/quest/listQuests}">Back to quests</a>
+
+	</div>
+
+</body>
+</html>
+
+
+

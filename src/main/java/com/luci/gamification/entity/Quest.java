@@ -35,7 +35,9 @@ public class Quest {
 	
 	@Column(name = "approved")
 	private int approved;
-	
+		
+	@Column(name = "creator_id")
+	private int creatorId;
 	
 	// constructors
 	
@@ -126,6 +128,14 @@ public class Quest {
 	}
 
 
+	public int getCreatorId() {
+		return creatorId;
+	}
+
+
+	public void setCreatorId(int creatorId) {
+		this.creatorId = creatorId;
+	}
 	
 	
 }

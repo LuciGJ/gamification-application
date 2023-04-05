@@ -70,7 +70,7 @@ public class User {
 
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "creator_id")
+	@JoinColumn(name = "user_id")
 	private List<Quest> questList;
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

@@ -1,6 +1,7 @@
 package com.luci.gamification.controller;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.luci.gamification.entity.Badge;
+import com.luci.gamification.entity.Quest;
 import com.luci.gamification.entity.User;
+import com.luci.gamification.entity.UserDetail;
+import com.luci.gamification.service.BadgeService;
+import com.luci.gamification.service.QuestService;
 import com.luci.gamification.service.UserService;
 
 
@@ -23,6 +29,12 @@ public class AdminController {
 	@Autowired 
 	UserService userService;
 	
+	@Autowired
+	QuestService questService;
+	
+	@Autowired
+	BadgeService badgeService;
+	
 	
 	// display the account administration page with all accounts
 	@GetMapping("/administrationPage")
@@ -30,6 +42,18 @@ public class AdminController {
 		model.addAttribute("users", userService.findAllUsers(principal.getName()));
 		
 		return "admin/administration-page";
+	}
+	
+	@GetMapping("/submissionsPage")
+	public String submissionsPage(Model model) {
+		List<Quest> questList = questService.findQuestsByApproval(false);
+		List<Badge> badgeList = new ArrayList<>();
+		for(Quest quest : questList) {
+			badgeList.add(badgeService.findBadgeById(quest.getBadgeId()));
+		}
+		model.addAttribute("quests", questList);
+		model.addAttribute("badges", badgeList);
+		return "admin/submissions-page";
 	}
 
 	// suspend an user
@@ -80,5 +104,48 @@ public class AdminController {
 		
 		return "admin/administration-page";
 		
+	}
+	
+	
+	@GetMapping("/acceptQuest")
+	public String acceptQuest(@RequestParam("questId") int questId) {
+		
+		// get the quest by id, which is passed as a request parameter
+		Quest quest = questService.findQuestById(questId);
+		
+		quest.setApproved(1);
+		
+		questService.update(quest);
+		
+		return "redirect:/admin/submissionsPage";
+	}
+	
+	
+	@GetMapping("/rejectQuest")
+	public String rejectQuest(@RequestParam("questId") int questId) {
+		
+		// get the quest by id, which is passed as a request parameter
+		Quest quest = questService.findQuestById(questId);
+		
+		// get user detail using the quest's creator id
+		
+		
+		UserDetail userDetail = userService.findDetailById(quest.getCreatorId());
+		
+		// refund tokens to user
+		
+		userDetail.setTokens(userDetail.getTokens() + quest.getTokens());
+		
+		Badge badge = badgeService.findBadgeById(quest.getBadgeId());
+		
+		if(badge != null) {
+			badgeService.delete(badge);
+		}
+		
+		questService.delete(quest);
+		
+		userService.updateUserDetail(userDetail);
+		
+		return "redirect:/admin/submissionsPage";
 	}
 }

@@ -42,6 +42,7 @@ public class GamificationSecurityConfig {
 				.requestMatchers("/admin/*").hasRole("ADMIN")
 				.requestMatchers("/account/*").hasRole("USER")
 				.requestMatchers("/menu").hasRole("USER")
+				.requestMatchers("/quest/*").hasRole("USER")
 				.requestMatchers("/user-photos/*").permitAll()
 				.requestMatchers("badge-photos/*").permitAll()
 				.requestMatchers("/img/*").permitAll().requestMatchers("/css/*").permitAll()

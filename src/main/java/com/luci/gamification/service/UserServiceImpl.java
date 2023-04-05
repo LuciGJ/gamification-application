@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.luci.gamification.account.EmailDetails;
 import com.luci.gamification.dao.RoleDAO;
 import com.luci.gamification.dao.UserDAO;
+import com.luci.gamification.entity.Quest;
 import com.luci.gamification.entity.Role;
 import com.luci.gamification.entity.User;
 import com.luci.gamification.entity.UserDetail;
@@ -234,5 +235,25 @@ public class UserServiceImpl implements UserService {
 	public UserDetail findDetailByDisplayName(String displayName) {
 		return userDAO.findUserDetailByDisplayName(displayName);
 	}
+
+	@Transactional
+	@Override
+	public void updateUserDetail(UserDetail detail) {
+		userDAO.updateDetail(detail);
+	}
+
+	@Transactional
+	@Override
+	public UserDetail findDetailById(int id) {
+		return userDAO.findDetailById(id);
+	}
+
+	@Override
+	public int getUserIdFromQuest(Quest quest) {
+		return userDAO.getUserIdFromQuest(quest);
+	}
+	
+	
+	
 
 }

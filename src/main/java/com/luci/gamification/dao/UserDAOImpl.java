@@ -12,6 +12,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.luci.gamification.entity.Quest;
 import com.luci.gamification.entity.User;
 import com.luci.gamification.entity.UserDetail;
 
@@ -206,6 +207,50 @@ public class UserDAOImpl implements UserDAO {
 		}
 
 		return user;
+	}
+
+
+
+	@Override
+	public void updateDetail(UserDetail detail) {
+		Session session = entityManager.unwrap(Session.class);
+		
+		session.merge(detail);
+		
+	}
+
+
+
+	@Override
+	public UserDetail findDetailById(int id) {
+		Session session = entityManager.unwrap(Session.class);
+		Query<UserDetail> query = session.createQuery("from UserDetail where id = :id", UserDetail.class);
+		query.setParameter("id", id);
+		UserDetail user;
+		try {
+			user = query.getSingleResult();
+		} catch (Exception e) {
+			user = null;
+		}
+
+		return user;
+	}
+
+
+
+	@Override
+	public int getUserIdFromQuest(Quest quest) {
+		Session session = entityManager.unwrap(Session.class);
+		Query<Integer> query =  session.createQuery("select quest.userId from Quest quest where quest.id = : id", Integer.class);
+		query.setParameter("id", quest.getId());
+		int id;
+		try {
+			id = query.getSingleResult();
+		} catch (Exception e) {
+			id = 0;
+		}
+		
+		return id;
 	}
 
 }

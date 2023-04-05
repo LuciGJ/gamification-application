@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+	integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+	crossorigin="anonymous">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<title>Quests</title>
+</head>
+
+<body>
+
+	<div class="container border border-black bg-success"
+		style="margin-top: 5%;">
+
+		<h3 class ="font-weight-bold text-light">Quests</h3>
+		<hr>
+		<a th:href="@{/quest/addQuestForm}"
+			class="btn btn-primary btn-sm mr-5 mb-3"> Add quest </a>
+
+
+
+
+		<table class="table table-bordered table-striped">
+			<thead class="thead-light">
+				<tr>
+					<th>Name</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr th:each="quest: ${quests}">
+
+					<td>
+					<a class ="font-weight-bold text-light" th:href="@{/quest/questDetails(questId=${quest.id})}" th:text="${quest.name}"></a>
+					
+					<td/>
+
+					</div>
+
+				</tr>
+			</tbody>
+		</table>
+		<hr>
+		<a class ="font-weight-bold text-light" th:href="@{/menu}">Back to menu</a>
+
+	</div>
+
+</body>
+</html>
+
+
+

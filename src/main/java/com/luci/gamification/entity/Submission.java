@@ -27,6 +27,9 @@ public class Submission {
 	@Column(name = "status")
 	private int status;
 	
+	@Column(name = "submit_id")
+	private int submitId;
+	
 	
 	// constructors
 	
@@ -81,6 +84,18 @@ public class Submission {
 	public void setStatus(int status) {
 		this.status = status;
 	}
+
+
+	public int getSubmitId() {
+		return submitId;
+	}
+
+
+	public void setSubmitId(int submitId) {
+		this.submitId = submitId;
+	}
+	
+	
 	
 	
 }

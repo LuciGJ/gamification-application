@@ -18,7 +18,7 @@ public class RoleDAOImpl implements RoleDAO {
 	EntityManager entityManager;
 
 	
-	// similar to the logic used in the UserDAO class
+	// similar to the logic used in the UserDAOImpl class
 	// get a session, create a parameterized query and return the result
 	@Override
 	public Role findRoleByName(String role) {

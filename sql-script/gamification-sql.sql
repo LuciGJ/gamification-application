@@ -76,14 +76,15 @@ CREATE TABLE `quest` (
   `tokens` int(11) NOT NULL,
   `badge_id` int(11) DEFAULT NULL,
   `approved` int(1) NOT NULL,
-  `creator_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `creator_id` int(11) DEFAULT NULL,
 
   PRIMARY KEY (`id`),
 
-  KEY `FK_USER_ID_id3` (`creator_id`),
+  KEY `FK_USER_ID_id3` (`user_id`),
 
   CONSTRAINT `FK_USER_QUEST` 
-  FOREIGN KEY (`creator_id`) 
+  FOREIGN KEY (`user_id`) 
   REFERENCES `user` (`id`) 
 
   ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -97,7 +98,8 @@ CREATE TABLE `submission` (
   `quest_id` int(11) NOT NULL,
   `answer` varchar(500) DEFAULT NULL,
   `status` int(1) NOT NULL,
-  `user_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `submit_id` int(11) DEFAULT NULL,
 
   PRIMARY KEY (`id`),
 

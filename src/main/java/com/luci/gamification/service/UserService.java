@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import com.luci.gamification.entity.Quest;
 import com.luci.gamification.entity.User;
 import com.luci.gamification.entity.UserDetail;
 import com.luci.gamification.user.GamificationUser;
@@ -45,4 +46,10 @@ public interface UserService extends UserDetailsService {
 	public List<User> findAllUsers(String username);
 
 	public List<User> searchUser(String currentUsername, String username);
+
+	public void updateUserDetail(UserDetail detail);
+	
+	public UserDetail findDetailById(int id);
+	
+	public int getUserIdFromQuest(Quest quest);
 }

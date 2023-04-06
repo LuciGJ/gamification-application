@@ -33,6 +33,12 @@ public class SubmissionServiceImpl implements SubmissionService {
 		submissionDAO.save(submission);		
 	}
 
+	@Transactional
+	@Override
+	public Submission findSubmissionById(int submissionId) {
+		return submissionDAO.findSubmissionById(submissionId);
+	}
+
 
 	
 	

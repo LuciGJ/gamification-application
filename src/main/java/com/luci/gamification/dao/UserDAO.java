@@ -39,4 +39,5 @@ public interface UserDAO {
 	
 	public int getUserIdFromQuest(Quest quest);
 
+	public List<UserDetail> getUsersByQuests();
 }

@@ -21,19 +21,55 @@
 
 	<div style="margin-left: 20%; margin-top: 5%;"
 		class="mainbox col-md-7 col-md-offset-6 col-sm-10 col-sm-offset-6 border border-black bg-success">
+
+<a th:if="${quest.creatorId} == ${submission.userId}" class ="btn btn-primary col-2" th:href="@{/quest/listSubmissions(questId=${quest.id})}" th:text="Submissions"></a>
+
 <!-- Display quest information -->
 
 
 		
-		<p class="font-weight-bold text-light"
-			th:text="${quest.name}"></p>
+		<h3 class="font-weight-bold text-light" style = "text-align: center"
+			th:text="${quest.name}"></h3>
 		<p class="font-weight-bold text-light"
 			th:text="${quest.description}"></p>
-		<p class="font-weight-bold text-light"
-			th:text="${quest.badgeId != null} ? 'This quest rewards a badge' : 'This quest does not reward a badge'"></p>
 		<p class="font-weight-bold text-light" 
 			th:text="'Tokens: ' + ${quest.tokens}"/>
+		<div th:if="${badge} != null">
+  		 	<img class="border border-black" width="40" height="40"
+					th:src="@{'/badge-photos/' + ${badge.picture}}" />
+			<p class="font-weight-bold text-light"
+				th:text="${badge.name}"></p>
+			<p class="font-weight-bold text-light"
+				th:text="${badge.description}"></p>
+		</div>
+		
+		<form th:action="@{/quest/submissionProcess}"
+						th:object="${submission}" method="POST" class="form-horizontal">
 
+					<input type="hidden" th:field="*{questId}" />
+					<input type="hidden" th:field="*{userId}" />
+					<textarea th:if="*{exists == false}" placeholder="Answer" rows="5" cols="33"
+					maxlength="200" th:field="*{submissionAnswer}"> </textarea>
+						
+					<textarea disabled th:if="*{exists == true}" placeholder="Answer" rows="5" cols="33"
+					maxlength="200" th:field="*{submissionAnswer}"> </textarea>
+						<div th:if="${#fields.hasErrors('submissionAnswer')}"
+							style="margin-bottom: 25px" class="text-danger">
+							<ul>
+								<li th:each="err : ${#fields.errors('submissionAnswer')}"
+									th:text="${err}" />
+							</ul>
+						</div>
+						<br>
+						<button th:if="*{exists} == false" type="submit" class="btn btn-primary col-2">Send submission</button>
+						
+					</form>
+
+			
+
+	
+		
+		
 		<a class="text-light" th:href="@{/quest/listQuests}">Back to quests</a>
 
 	</div>

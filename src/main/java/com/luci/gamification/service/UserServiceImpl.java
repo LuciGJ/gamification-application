@@ -248,9 +248,16 @@ public class UserServiceImpl implements UserService {
 		return userDAO.findDetailById(id);
 	}
 
+	@Transactional
 	@Override
 	public int getUserIdFromQuest(Quest quest) {
 		return userDAO.getUserIdFromQuest(quest);
+	}
+
+	@Transactional
+	@Override
+	public List<UserDetail> getUsersByQuests() {
+		return userDAO.getUsersByQuests();
 	}
 	
 	

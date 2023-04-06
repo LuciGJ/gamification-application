@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+	integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+	crossorigin="anonymous">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<title>My submissions</title>
+</head>
+
+<body>
+
+	<div class="container border border-black bg-success"
+		style="margin-top: 5%;">
+
+		<h3 class ="font-weight-bold text-light">Submissions</h3>
+		<hr>
+		
+
+
+
+		<table class="table table-bordered table-striped">
+			<thead class="thead-light">
+				<tr>
+					<th>Quest</th>
+					<th>Answer</th>
+					<th>Status</th>
+
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr th:each="submission, iterStat: ${submissions}">
+
+					<td>
+					<a th:if="${quests[iterStat.index].id} != -1" class ="font-weight-bold text-light" th:href="@{/quest/questDetails(questId=${quests[iterStat.index].id})}" th:text="${quests[iterStat.index].name}"></a>
+					<p th:if="${quests[iterStat.index].id} == -1" class ="font-weight-bold text-light" >N/A</p>
+					</td>
+					
+					<td class="font-weight-bold text-light" th:text="${submission.answer}" />
+					
+					<td th:switch="${submission.status}">
+					 	<p class ="font-weight-bold text-light" th:case="0">Submitted</p>
+					 	<p style ="color:blue;" th:case="1">Accepted</p>
+						<p style ="color:red;" th:case="2">Rejected</p>
+					
+					</td>
+
+		
+					
+
+				</tr>
+			</tbody>
+		</table>
+		<hr>
+		<a class ="font-weight-bold text-light" th:href="@{/quest/listQuests}">Back to quests</a>
+
+	</div>
+
+</body>
+</html>
+
+
+

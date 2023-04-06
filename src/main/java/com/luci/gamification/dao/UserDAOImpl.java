@@ -253,4 +253,19 @@ public class UserDAOImpl implements UserDAO {
 		return id;
 	}
 
+
+
+	@Override
+	public List<UserDetail> getUsersByQuests() {
+		Session session = entityManager.unwrap(Session.class);
+		Query<UserDetail> query = session.createQuery("from UserDetail order by quests desc, displayName asc", UserDetail.class);
+		List<UserDetail> users;
+		try {
+			users = query.getResultList();
+		} catch (Exception e) {
+			users = new ArrayList<>();
+		}
+		return users;
+	}
+
 }

@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+	integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+	crossorigin="anonymous">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<title>My quests</title>
+</head>
+
+<body>
+
+	<div class="container border border-black bg-success"
+		style="margin-top: 5%;">
+
+		<h3 class ="font-weight-bold text-light">Quests</h3>
+		<hr>
+		
+
+
+
+		<table class="table table-bordered table-striped">
+			<thead class="thead-light">
+				<tr>
+					<th>Name</th>
+					<th>Description</th>
+					<th>Answer</th>
+					<th>Tokens</th>
+					<th>Badge name</th>
+					<th>Badge description</th>
+					<th>Badge picture</th>
+
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr th:each="quest, iterStat : ${quests}">
+					<td>
+					<a class ="font-weight-bold text-light" th:href="@{/quest/questDetails(questId=${quest.id})}" th:text="${quest.name}"></a>
+					</td>
+					<td class="font-weight-bold text-light" th:text="${quest.description}" />
+					<td class="font-weight-bold text-light" th:text="${quest.answer}" />
+					<td class="font-weight-bold text-light" th:text="${quest.tokens}" />
+					<td class="font-weight-bold text-light" th:text="${badges[iterStat.index] eq null} ? 'N/A' : ${badges[iterStat.index].name}" />
+					<td class="font-weight-bold text-light" th:text="${badges[iterStat.index] eq null} ? 'N/A' : ${badges[iterStat.index].description}" />
+					<td th:if="${badges[iterStat.index]} == null" class="font-weight-bold text-light" th:text="'N/A'" />
+					<td th:if="${badges[iterStat.index]} != null">
+						<img class="border border-black" width="40" height="40"
+					th:src="@{'/badge-photos/' + ${badges[iterStat.index].picture}}" />
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<hr>
+		<a class ="font-weight-bold text-light" th:href="@{/quest/listQuests}">Back to quests</a>
+
+	</div>
+
+</body>
+</html>
+
+
+

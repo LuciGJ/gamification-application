@@ -11,4 +11,6 @@ public interface SubmissionService {
 	public List<Submission> findSubmissionsByQuest(int questId);
 	
 	public void save(Submission submission);
+	
+	public Submission findSubmissionById(int submissionId);
 }

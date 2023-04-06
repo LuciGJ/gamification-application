@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+	integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+	crossorigin="anonymous">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<title>Leaderboard</title>
+</head>
+
+<body>
+
+	<div class="container border border-black bg-success"
+		style="margin-top: 5%;">
+
+		<h3 class="font-weight-bold text-light">Leaderboard</h3>
+		<hr>
+
+
+<!-- table to display the leaderboard-->
+		<table class="table table-bordered table-striped">
+			<thead class="thead-light">
+				<tr>
+					<th>Rank</th>
+					<th>Name</th>
+					<th>Quests</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr th:each="user, iterStat : ${users}">
+					<td class="font-weight-bold text-light" th:text="${rankings[iterStat.index]}" />
+					<td> 
+						<a class ="font-weight-bold text-light" th:href="@{/profile/viewProfile(displayName=${user.displayName})}" th:text="${user.displayName}"></a>
+					</td>
+					<td class="font-weight-bold text-light" th:text="${user.quests}" />
+				</tr>
+			</tbody>
+		</table>
+		<hr>
+		<a class="font-weight-bold text-light" th:href="@{/menu}">Back to menu</a>
+
+	</div>
+
+</body>
+</html>
+
+
+

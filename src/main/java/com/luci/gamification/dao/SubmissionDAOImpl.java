@@ -8,7 +8,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-
+import com.luci.gamification.entity.Quest;
 import com.luci.gamification.entity.Submission;
 
 
@@ -25,7 +25,7 @@ public class SubmissionDAOImpl implements SubmissionDAO {
 	@Override
 	public List<Submission> findSubmissionsByQuest(int questId) {
 		Session session = entityManager.unwrap(Session.class);
-		Query<Submission> query = session.createQuery("from Submission where questId = :id", Submission.class);
+		Query<Submission> query = session.createQuery("from Submission where questId = :id and status = 0", Submission.class);
 
 		query.setParameter("id", questId);
 	
@@ -43,6 +43,20 @@ public class SubmissionDAOImpl implements SubmissionDAO {
 		Session session = entityManager.unwrap(Session.class);
 		session.merge(submission);
 		
+	}
+
+	@Override
+	public Submission findSubmissionById(int submissionId) {
+		Session session = entityManager.unwrap(Session.class);
+		Query<Submission> query = session.createQuery("from Submission where id = :id", Submission.class);
+		query.setParameter("id", submissionId);
+		Submission submission;
+		try {
+			submission = query.getSingleResult();
+		} catch (Exception e) {
+			submission = null;
+		}
+		return submission;
 	}
 
 

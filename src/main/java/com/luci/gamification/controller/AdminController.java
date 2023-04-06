@@ -148,4 +148,18 @@ public class AdminController {
 		
 		return "redirect:/admin/submissionsPage";
 	}
+	
+	@GetMapping("/deleteQuest")
+	public String deleteQuest(@RequestParam("questId") int questId) {
+		
+		// get the quest by id, which is passed as a request parameter
+		Quest quest = questService.findQuestById(questId);
+		
+		
+		questService.delete(quest);
+		
+		
+		return "redirect:/quest/listQuests";
+	}
+	
 }

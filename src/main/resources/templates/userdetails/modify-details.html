@@ -30,9 +30,12 @@
 <div th:if="${message}">
 					<h2 style="color: red;" th:text="${message}"></h2>
 				</div>
-<!-- hidden id and image in order to not lose them -->
+<!-- hidden id, image, tokens and quests in order to not lose them -->
 				<input type="hidden" th:field="*{id}" /> <input type="hidden"
-					th:field="*{image}" /> <input type="text" maxlength="50"
+					th:field="*{image}" />
+					<input type="hidden" th:field="*{tokens}" />
+					<input type="hidden" th:field="*{quests}" />
+					 <input type="text" maxlength="50"
 					th:field="*{displayName}" class="form-control mb-4 col-4"
 					placeholder="Display name"/>
 				<textarea rows="5" cols="33" maxlength="1000"
@@ -40,6 +43,13 @@
 			    Description 
 			  </textarea>
 				<br>
+			<p class="font-weight-bold text-light"
+			th:text="'Badge:'"></p>
+			<select th:field="*{badgeId}">
+			    <option value="0">none</option>
+			    <option th:each="badge : ${badges}" th:value="${badge.id}" th:text="${badge.name}"></option>
+		    </select>
+		    <br>
 				<button type="submit" class="btn btn-primary col-2">Save</button>
 
 			</form>

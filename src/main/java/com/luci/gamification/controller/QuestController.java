@@ -2,6 +2,7 @@ package com.luci.gamification.controller;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.luci.gamification.badge.GamificationBadge;
 import com.luci.gamification.entity.Badge;
 import com.luci.gamification.entity.Quest;
+import com.luci.gamification.entity.Submission;
 import com.luci.gamification.entity.User;
 import com.luci.gamification.entity.UserDetail;
 import com.luci.gamification.quest.GamificationQuest;
@@ -29,10 +31,9 @@ import com.luci.gamification.service.BadgeService;
 import com.luci.gamification.service.QuestService;
 import com.luci.gamification.service.SubmissionService;
 import com.luci.gamification.service.UserService;
-import com.luci.gamification.user.GamificationUser;
+import com.luci.gamification.submission.GamificationSubmission;
 import com.luci.gamification.utility.FileUploadUtil;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 
@@ -64,23 +65,233 @@ public class QuestController {
 	}
 
 	@GetMapping("/listQuests")
-	public String listQuests(Model model) {
+	public String listQuests(Model model, Principal principal) {
+		// get all approved quests
 		List<Quest> questList = questService.findQuestsByApproval(true);
-		model.addAttribute("quests", questList);
+		
+		// sort quests based on submission status
+		User user = userService.findUserByUsername(principal.getName());
+		
+		List<Integer> statusList = new ArrayList<>();
+		List<Quest> quests = new ArrayList<>();
+		
+		List<Quest> notSubmitted = new ArrayList<>();
+		List<Quest> submitted = new ArrayList<>();
+		List<Quest> accepted = new ArrayList<>();
+		List<Quest> rejected = new ArrayList<>();
+		
+		int notSubmittedNumber = 0;
+		int submittedNumber = 0;
+		int acceptedNumber = 0;
+		int rejectedNumber = 0;
+		
+		List<Submission> submissions = user.getSubmissionList();
+		
+		for(Quest quest : questList) {
+			boolean added = false;
+			for(Submission submission: submissions) {
+				
+				if(submission.getQuestId() == quest.getId()) {
+					if(submission.getStatus() == 0) {
+						submitted.add(quest);
+						submittedNumber++;
+					} else if(submission.getStatus() == 1) {
+						accepted.add(quest);
+						acceptedNumber++;
+					} else {
+						rejected.add(quest);
+						rejectedNumber++;
+					}
+					added = true;
+					break;
+				}
+				
+			}
+			if(!added) {
+				notSubmittedNumber++;
+				notSubmitted.add(quest);
+			}
+		}
+		
+		for(Quest quest: notSubmitted) {
+			quests.add(quest);
+		}
+		
+		for(int i = 0 ; i < notSubmittedNumber; i ++) {
+			statusList.add(3);
+		}
+		
+		for(Quest quest: submitted) {
+			quests.add(quest);
+		}
+		
+		for(int i = 0; i < submittedNumber; i++) {
+			statusList.add(0);
+		}
+		
+		for(Quest quest: accepted) {
+			quests.add(quest);
+		}
+		
+		for(int i = 0 ; i < acceptedNumber; i++) {
+			statusList.add(1);
+		}
+		
+		for(Quest quest : rejected) {
+			quests.add(quest);
+		}
+		
+		for(int i = 0 ; i < rejectedNumber; i++) {
+			statusList.add(2);
+		}
+		
+		model.addAttribute("quests", quests);
+		model.addAttribute("status", statusList);
 		return "quest/list-quests";
 	}
 	
 	@GetMapping("/questDetails")
-	public String questDetails(@RequestParam("questId") int questId, Model model) {
+	public String questDetails(@RequestParam("questId") int questId, Model model, Principal principal) {
 		
+		User user = userService.findUserByUsername(principal.getName());
+		List<Submission> submissions = user.getSubmissionList();
 		// get the quest by id, passed as a request parameter
 		Quest quest = questService.findQuestById(questId);
 		
+		// get the quest's badge
+		
+		Badge badge = badgeService.findBadgeById(quest.getBadgeId());
+		
+		// set submission data
+		
+		GamificationSubmission newSubmission = new GamificationSubmission();
+		newSubmission.setQuestId(questId);
+		newSubmission.setUserId(user.getId());
+		newSubmission.setExists(false);
+		
+		// check if the user has already submitted an answer
+		
+		for(Submission submission : submissions) {
+			if(submission.getQuestId() == questId) {
+				newSubmission.setExists(true);
+				newSubmission.setSubmissionAnswer(submission.getAnswer());
+				break;
+			}
+		}
+		
 		model.addAttribute("quest", quest);
 		
+		model.addAttribute("badge", badge);
 		
+		model.addAttribute("submission", newSubmission);
 		return "quest/list-quest-details";
 	}
+	
+	@GetMapping("/listSubmissions")
+	public String listSubmissions(@RequestParam("questId") int questId, Model model, Principal principal) {
+		
+		
+		// check if the user is the creator of the quest
+		
+		Quest quest = questService.findQuestById(questId);
+		
+		User user = userService.findUserByUsername(principal.getName());
+		
+		if(user.getId() != quest.getCreatorId()) {
+			return "redirect:/quest/listQuests";
+		}
+		
+		// get the quest's submissions
+		List<Submission> submissions = submissionService.findSubmissionsByQuest(questId);
+		
+		
+		model.addAttribute("quest", quest);
+		
+		model.addAttribute("submissions", submissions);
+		
+
+		return "quest/list-submissions-page";
+	}
+	
+	@GetMapping("/acceptSubmission")
+	public String acceptSubmission(@RequestParam("submissionId") int submissionId, Principal principal) {
+		
+		// get the submission by id, which is passed as a request parameter
+		
+		Submission submission = submissionService.findSubmissionById(submissionId);
+		
+		// check if the current user is the creator of the quest
+		
+		Quest quest = questService.findQuestById(submission.getQuestId());
+		
+		User user = userService.findUserByUsername(principal.getName());
+		
+		if(user.getId() != quest.getCreatorId()) {
+			return "redirect:/quest/listQuests";
+		}
+		
+		// approve the submission
+		
+		submission.setStatus(1);
+		
+		// reward the user
+		
+		
+
+		User userToReward = userService.findUserById(submission.getSubmitId());
+		UserDetail userDetail = userToReward.getUserDetail();
+
+		// if the user is the creator of the quest do not award tokens
+		
+		if(userToReward.getId() != quest.getCreatorId()) {
+			userDetail.setTokens(userDetail.getTokens() + quest.getTokens());
+		}
+		
+		userDetail.setQuests(userDetail.getQuests() + 1);
+		// check if there is a badge and if there is award the user
+		
+		Badge badge = badgeService.findBadgeById(quest.getBadgeId());
+		
+		if(badge != null) {
+			userToReward.addBadge(badge);
+		}
+		
+		// save the changes
+		
+		userService.updateUser(userToReward);
+		
+		return "redirect:/quest/listSubmissions?questId=" + quest.getId();
+	}
+	
+	
+	@GetMapping("/rejectSubmission")
+	public String rejectSubmission(@RequestParam("submissionId") int submissionId, Principal principal) {
+		
+		// get the submission by id, which is passed as a request parameter
+		
+		Submission submission = submissionService.findSubmissionById(submissionId);
+		
+		// check if the current user is the creator of the quest
+		
+		Quest quest = questService.findQuestById(submission.getQuestId());
+		
+		User user = userService.findUserByUsername(principal.getName());
+		
+		if(user.getId() != quest.getCreatorId()) {
+			return "redirect:/quest/listQuests";
+		}
+		
+		// reject the submission
+		
+		submission.setStatus(2);
+		
+		// save the changes
+		
+		submissionService.save(submission);
+		
+		return "redirect:/quest/listSubmissions?questId=" + quest.getId();
+	}
+	
 	
 	@GetMapping("/addQuestForm")
 	public String addQuestForm(Model model, Principal principal) {
@@ -209,15 +420,114 @@ public class QuestController {
 			}
 
 		}
-		newQuest.setBadgeId(newBadge.getId());
+		if(newBadge != null) {
+			newQuest.setBadgeId(newBadge.getId());
+		}
 		newQuest.setCreatorId(user.getId());
 		user.addQuest(newQuest);
 		userService.updateUser(user);
+		model.addAttribute("message", "The quest has been successfully created and is now awating approval.");
+		
+		return "quest/quest-confirm-page";
 
-		return "redirect:/quest/listQuests";
+	}
+	
+	
+	@PostMapping("/submissionProcess")
+	public String submissionProcess(@Valid @ModelAttribute("submission") GamificationSubmission submission, BindingResult bindingResult,
+			Model model) {
+
+
+		// if there were errors doing validation display them
+		
+		GamificationSubmission tempSubmission = new GamificationSubmission();
+		tempSubmission.setExists(submission.isExists());
+		tempSubmission.setQuestId(submission.getQuestId());
+		tempSubmission.setUserId(submission.getUserId());
+		User user = userService.findUserById(submission.getUserId());
+
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("submission", tempSubmission);
+			model.addAttribute("userDetail", user.getUserDetail());
+			return "quest/add-quest";
+		}
+	
+		// check if the user already submitted
+		
+		for(Submission sub : user.getSubmissionList()) {
+			if(sub.getQuestId() == submission.getQuestId()) {
+				return "redirect:/quest/listQuests";
+			}
+		}
+		
+		// if everything is fine send the submission
+		
+		
+		Submission newSubmission = new Submission();
+		newSubmission.setAnswer(submission.getSubmissionAnswer());
+		newSubmission.setQuestId(submission.getQuestId());
+		newSubmission.setStatus(0);
+		newSubmission.setSubmitId(submission.getUserId());
+		user.addSubmission(newSubmission);
+		userService.updateUser(user);
+		model.addAttribute("message", "The submission has been successfully sent and is now awating approval.");
+		
+		return "quest/quest-confirm-page";
 
 	}
 
+
+	@GetMapping("/userSubmissions")
+	public String userSubmissions(Model model, Principal principal) {
+		User user = userService.findUserByUsername(principal.getName());
+		
+		List<Submission> submissions = user.getSubmissionList();
+		List<Quest> quests = new ArrayList<>();
+		
+		// populate the list with the quests from user's submissions
+		
+		for(Submission submission: submissions) {
+			Quest quest = questService.findQuestById(submission.getQuestId());
+			
+			// the quest might be null since it can be removed
+			
+			if(quest == null) {
+				quest = new Quest();
+				quest.setId(-1);
+			}
+			quests.add(quest);
+		}
+		
+		model.addAttribute("quests", quests);
+		if(submissions == null) {
+			model.addAttribute("submissions", new ArrayList<Submission>());
+		} else {
+			model.addAttribute("submissions", submissions);
+		}
+		
+		return "quest/list-user-submissions";
+	}
+	
+	
+	@GetMapping("/userQuests")
+	public String userQuest(Model model, Principal principal) {
+		User user = userService.findUserByUsername(principal.getName());
+		
+		List<Quest> quests = user.getQuestList();
+		List<Badge> badges = new ArrayList<>();
+		
+		// populate the list with the badges from user's quests
+		
+		for(Quest quest: quests) {
+			badges.add(badgeService.findBadgeById(quest.getBadgeId()));
+		}
+		
+		model.addAttribute("quests", quests);
+		model.addAttribute("badges", badges);
+
+		
+		return "quest/list-user-quests";
+	}
 	
 
 }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
@@ -19,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.luci.gamification.entity.Badge;
 import com.luci.gamification.entity.User;
 import com.luci.gamification.entity.UserDetail;
+import com.luci.gamification.service.BadgeService;
 import com.luci.gamification.service.UserService;
 import com.luci.gamification.utility.FileUploadUtil;
 
@@ -33,6 +36,9 @@ public class UserDetailController {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	BadgeService badgeService;
 
 	
 	// remove whitespace from both ends of strings
@@ -51,8 +57,9 @@ public class UserDetailController {
 	public String showDetails(Principal principal, Model model) {
 
 		User user = userService.findUserByUsername(principal.getName());
-
+		Badge badge = badgeService.findBadgeById(user.getUserDetail().getBadgeId());
 		model.addAttribute("userDetail", user.getUserDetail());
+		model.addAttribute("badge", badge);
 
 		return "userdetails/list-user-details";
 	}
@@ -62,8 +69,9 @@ public class UserDetailController {
 	public String updateDetailForm(Principal principal, Model model) {
 
 		User user = userService.findUserByUsername(principal.getName());
-
+		List<Badge> badges = (List<Badge>) user.getBadges();
 		model.addAttribute("userDetail", user.getUserDetail());
+		model.addAttribute("badges", badges);
 		return "userdetails/modify-details";
 	}
 
@@ -160,5 +168,14 @@ public class UserDetailController {
 
 		return "redirect:/userdata/uploadPictureForm";
 	}
+	
+	@GetMapping("/badges") 
+	public String badges(Model model, Principal principal) {
+		User user = userService.findUserByUsername(principal.getName());
+		List<Badge> badges = (List<Badge>) user.getBadges();
+		model.addAttribute("badges", badges);
+		return "userdetails/badges";
+	}
+	
 
 }

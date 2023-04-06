@@ -33,7 +33,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class UserServiceImpl implements UserService {
 
 	// the implementation of the UserService interface
-	
+
 	@Autowired
 	private UserDAO userDAO;
 
@@ -43,7 +43,6 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
-	
 	// delegate the method to userDAO
 	@Override
 	@Transactional
@@ -55,7 +54,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public void saveUser(GamificationUser user, EmailService emailService, HttpServletRequest request) {
-		
+
 		// create a new user using the input received in the GamificationUser object
 		User newUser = new User();
 		newUser.setUsername(user.getUsername());
@@ -71,11 +70,11 @@ public class UserServiceImpl implements UserService {
 		newUser.setSuspended(0);
 
 		// set the role to regular user
-		
+
 		newUser.setRoles(Arrays.asList(roleDAO.findRoleByName("ROLE_USER")));
 
 		// create a confirmation token and send the link to the user's email
-		
+
 		String token;
 		do {
 			token = RandomStringBuilder.buildRandomString(30);
@@ -93,8 +92,8 @@ public class UserServiceImpl implements UserService {
 
 	}
 
-	
-	// used to authenticate the user, checks if the account is confirmed or suspended
+	// used to authenticate the user, checks if the account is confirmed or
+	// suspended
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -111,19 +110,18 @@ public class UserServiceImpl implements UserService {
 			throw new LockedException("Account suspended");
 		}
 
-		
-		// return the user with the username, password and role (mapped from Role to GrantedAuthority)
+		// return the user with the username, password and role (mapped from Role to
+		// GrantedAuthority)
 		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
 				mapRolesToAuthorities(user.getRoles()));
 	}
 
-	
-	// used to convert from Role to GrantedAuthority by mapping each role to a SimpleGrantedAuthority and collecting them to a list
+	// used to convert from Role to GrantedAuthority by mapping each role to a
+	// SimpleGrantedAuthority and collecting them to a list
 	private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
 		return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
 	}
 
-	
 	// delegate methods to userDAO
 	@Override
 	@Transactional
@@ -136,7 +134,7 @@ public class UserServiceImpl implements UserService {
 	public User findUserByEmail(String email) {
 		return userDAO.findUserByEmail(email);
 	}
-	
+
 	// set tokens
 
 	@Transactional
@@ -165,7 +163,6 @@ public class UserServiceImpl implements UserService {
 
 	}
 
-	
 	// delegate methods to userDAO
 	@Override
 	public User findByResetPasswordToken(String token) {
@@ -214,8 +211,8 @@ public class UserServiceImpl implements UserService {
 		return userDAO.findUserById(id);
 	}
 
-	
-	// search the user in the list, if the username is null or empty return all users
+	// search the user in the list, if the username is null or empty return all
+	// users
 	@Override
 	public List<User> searchUser(String currentUsername, String username) {
 
@@ -259,8 +256,5 @@ public class UserServiceImpl implements UserService {
 	public List<UserDetail> getUsersByQuests() {
 		return userDAO.getUsersByQuests();
 	}
-	
-	
-	
 
 }

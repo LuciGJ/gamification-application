@@ -51,7 +51,6 @@ public class DataRecoveryController {
 		return "recovery/forgot-confirmation";
 	}
 
-	
 	// get the email from user
 	@GetMapping("/forgotUsername")
 	public String forgotUsername(Model model) {
@@ -59,19 +58,16 @@ public class DataRecoveryController {
 		return "recovery/forgot-username";
 	}
 
-	
 	// if the email is valid and an account is registered with it, send the username
 	@PostMapping("/forgotUsernameProcess")
 	public String forgotUsernameProcess(@Valid @ModelAttribute("email") Email email, BindingResult bindingResult,
 			Model model) {
 
-		
 		// validate the email
 		if (bindingResult.hasErrors()) {
 			return "recovery/forgot-username";
 		}
 
-		
 		// check if it exists
 		User exists = userService.findUserByEmail(email.getEmail());
 		if (exists == null) {
@@ -80,7 +76,6 @@ public class DataRecoveryController {
 			return "recovery/forgot-username";
 		}
 
-		
 		// if everything is fine send an email containing the username
 		EmailDetails details = new EmailDetails();
 
@@ -100,7 +95,6 @@ public class DataRecoveryController {
 		return "recovery/forgot-password";
 	}
 
-	
 	// if the username is correct and exists, send a password reset link
 	@PostMapping("/forgotPasswordProcess")
 	public String forgotPasswordProcess(@Valid @ModelAttribute("username") Username username,
@@ -124,7 +118,7 @@ public class DataRecoveryController {
 		do {
 			token = RandomStringBuilder.buildRandomString(30);
 		} while (userService.findByResetPasswordToken(token) != null);
-		
+
 		// set the token, create the link and send it to the user's email
 		userService.updateResetPasswordToken(token, exists.getEmail());
 		String resetPasswordLink = LinkUtility.getSiteURL(request) + "/recovery/resetPassword?token=" + token;

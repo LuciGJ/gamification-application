@@ -27,20 +27,18 @@ import com.luci.gamification.service.BadgeService;
 import com.luci.gamification.service.UserService;
 import com.luci.gamification.utility.FileUploadUtil;
 
-
 @Controller
 @RequestMapping("/userdata")
 public class UserDetailController {
 
 	// controller to handle the user's profile
-	
+
 	@Autowired
 	UserService userService;
-	
+
 	@Autowired
 	BadgeService badgeService;
 
-	
 	// remove whitespace from both ends of strings
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -50,8 +48,6 @@ public class UserDetailController {
 		dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
 	}
 
-	
-	
 	// display user's profile
 	@GetMapping("/listDetail")
 	public String showDetails(Principal principal, Model model) {
@@ -75,25 +71,24 @@ public class UserDetailController {
 		return "userdetails/modify-details";
 	}
 
-	
 	// process user profile updates
 	@PostMapping("/updateDetail")
 	public String updateDetail(Principal principal, @ModelAttribute("userDetail") UserDetail userDetail, Model model) {
 
 		User user = userService.findUserByUsername(principal.getName());
-		
-		if(userDetail.getDisplayName() == null) {
+
+		if (userDetail.getDisplayName() == null) {
 			model.addAttribute("message", "The display name cannot be null");
 			return "userdetails/modify-details";
 		}
-		
+
 		UserDetail exists = userService.findDetailByDisplayName(userDetail.getDisplayName());
-		
-		if(exists != null && !userDetail.getDisplayName().equals(user.getUserDetail().getDisplayName())) {
+
+		if (exists != null && !userDetail.getDisplayName().equals(user.getUserDetail().getDisplayName())) {
 			model.addAttribute("message", "Display name already taken");
 			return "userdetails/modify-details";
 		}
-		
+
 		user.setUserDetail(userDetail);
 
 		userService.updateUser(user);
@@ -101,7 +96,6 @@ public class UserDetailController {
 		return "redirect:/userdata/listDetail";
 	}
 
-	
 	// display a page where the user can upload a profile picture
 	@GetMapping("/uploadPictureForm")
 	public String uploadPictureForm(Principal principal, Model model) {
@@ -112,7 +106,6 @@ public class UserDetailController {
 		return "userdetails/user-photo";
 	}
 
-	
 	// handle picture upload
 	@PostMapping("/uploadPicture")
 	public String uploadPicture(Model model, Principal principal, @RequestParam("image") MultipartFile multipartFile)
@@ -122,12 +115,11 @@ public class UserDetailController {
 
 		model.addAttribute("userDetail", user.getUserDetail());
 
-		
 		// get the uploaded file's name
 		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 
-		
-		// check if the image is in an accepted format(jpg or png), if not display a message
+		// check if the image is in an accepted format(jpg or png), if not display a
+		// message
 		if (!(FileUploadUtil.getFileExtension(fileName).equals(".jpg")
 				|| FileUploadUtil.getFileExtension(fileName).equals(".png"))) {
 			model.addAttribute("imageError", "Invalid format, jpg and png allowed.");
@@ -135,8 +127,8 @@ public class UserDetailController {
 
 		}
 
-		
-		// check if the file is too large (maximum 8 MBs accepted, can be modified in application properties), if it is display a message
+		// check if the file is too large (maximum 8 MBs accepted, can be modified in
+		// application properties), if it is display a message
 		if (multipartFile.getSize() > 8000000) {
 			model.addAttribute("imageError", "Image too big, maximum 8 MB allowed.");
 			return "userdetails/user-photo";
@@ -144,7 +136,6 @@ public class UserDetailController {
 
 		String uploadDir = "user-photos/";
 
-		
 		// delete the user's old profile picture if he had one
 		File deleteFile;
 
@@ -156,7 +147,6 @@ public class UserDetailController {
 			Files.deleteIfExists(deleteFile.toPath());
 		}
 
-		
 		// name the file as user's id + extension
 		String newFileName = user.getId() + FileUploadUtil.getFileExtension(fileName);
 
@@ -168,14 +158,13 @@ public class UserDetailController {
 
 		return "redirect:/userdata/uploadPictureForm";
 	}
-	
-	@GetMapping("/badges") 
+
+	@GetMapping("/badges")
 	public String badges(Model model, Principal principal) {
 		User user = userService.findUserByUsername(principal.getName());
 		List<Badge> badges = (List<Badge>) user.getBadges();
 		model.addAttribute("badges", badges);
 		return "userdetails/badges";
 	}
-	
 
 }

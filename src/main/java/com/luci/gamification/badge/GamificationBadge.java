@@ -1,13 +1,12 @@
 package com.luci.gamification.badge;
 
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class GamificationBadge {
 
 	// class used to validate the badge input during quest creation
-	
+
 	@NotNull(message = "Name is required")
 	@Size(min = 1, max = 30, message = "Please choose a name between 1 and 30 characters")
 	private String badgeName;
@@ -17,19 +16,16 @@ public class GamificationBadge {
 	private String badgeDescription;
 
 	private String picture;
-	
+
 	private boolean activated;
-	
 
 	// constructor
-	
+
 	public GamificationBadge() {
 
 	}
 
 	// getters and setters
-
-	
 
 	public String getPicture() {
 		return picture;
@@ -62,6 +58,5 @@ public class GamificationBadge {
 	public void setActivated(boolean activated) {
 		this.activated = activated;
 	}
-	
 
 }

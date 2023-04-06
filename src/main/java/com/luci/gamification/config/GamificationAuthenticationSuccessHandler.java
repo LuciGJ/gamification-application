@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class GamificationAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
 	// redirect the user to the menu when the authentication succeeded
-	
+
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {

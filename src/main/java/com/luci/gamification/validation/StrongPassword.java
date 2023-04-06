@@ -14,8 +14,9 @@ import jakarta.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface StrongPassword {
-	
-	// annotation used to check if the password is strong enough, validated using the StrongPasswordValidator class
+
+	// annotation used to check if the password is strong enough, validated using
+	// the StrongPasswordValidator class
 
 	String message() default "The password must contain at least 8 characters, one lowercase letter, one uppercase letter, one digit and one symbol";
 

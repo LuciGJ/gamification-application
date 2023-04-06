@@ -25,7 +25,7 @@
 		<hr>
 
 
-<!-- table to display quest submissions-->
+		<!-- table to display quest submissions-->
 		<table class="table table-bordered table-striped">
 			<thead class="thead-light">
 				<tr>
@@ -44,35 +44,36 @@
 				<tr th:each="quest, iterStat : ${quests}">
 
 					<td class="font-weight-bold text-light" th:text="${quest.name}" />
-					<td class="font-weight-bold text-light" th:text="${quest.description}" />
+					<td class="font-weight-bold text-light"
+						th:text="${quest.description}" />
 					<td class="font-weight-bold text-light" th:text="${quest.answer}" />
 					<td class="font-weight-bold text-light" th:text="${quest.tokens}" />
-					<td class="font-weight-bold text-light" th:text="${badges[iterStat.index] eq null} ? 'N/A' : ${badges[iterStat.index].name}" />
-					<td class="font-weight-bold text-light" th:text="${badges[iterStat.index] eq null} ? 'N/A' : ${badges[iterStat.index].description}" />
-					<td th:if="${badges[iterStat.index]} == null" class="font-weight-bold text-light" th:text="'N/A'" />
-					<td th:if="${badges[iterStat.index]} != null">
-						<img class="border border-black" width="40" height="40"
-					th:src="@{'/badge-photos/' + ${badges[iterStat.index].picture}}" />
+					<td class="font-weight-bold text-light"
+						th:text="${badges[iterStat.index] eq null} ? 'N/A' : ${badges[iterStat.index].name}" />
+					<td class="font-weight-bold text-light"
+						th:text="${badges[iterStat.index] eq null} ? 'N/A' : ${badges[iterStat.index].description}" />
+					<td th:if="${badges[iterStat.index]} == null"
+						class="font-weight-bold text-light" th:text="'N/A'" />
+					<td th:if="${badges[iterStat.index]} != null"><img
+						class="border border-black" width="40" height="40"
+						th:src="@{'/badge-photos/' + ${badges[iterStat.index].picture}}" />
 					</td>
-					<td>
-					 <a th:href="@{/admin/acceptQuest(questId=${quest.id})}"
+					<td><a th:href="@{/admin/acceptQuest(questId=${quest.id})}"
 						class="btn btn-primary btn-sm"
 						onclick="if (!(confirm('Are you sure you want to accept this quest submission?'))) return false">
-							Accept </a>
-							
-							 <a th:href="@{/admin/rejectQuest(questId=${quest.id})}"
+							Accept </a> <a th:href="@{/admin/rejectQuest(questId=${quest.id})}"
 						class="btn btn-danger btn-sm"
 						onclick="if (!(confirm('Are you sure you want to reject this quest submission?'))) return false">
-							Reject </a>
-					</td> 
+							Reject </a></td>
 					</td>
-				
+
 
 				</tr>
 			</tbody>
 		</table>
 		<hr>
-		<a class="font-weight-bold text-light" th:href="@{/menu}">Back to menu</a>
+		<a class="font-weight-bold text-light" th:href="@{/menu}">Back to
+			menu</a>
 
 	</div>
 

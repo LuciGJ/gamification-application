@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public interface UserService extends UserDetailsService {
 
 	// interface that groups together methods related to the user
-	
+
 	public User findUserByUsername(String username);
 
 	public User findUserById(int id);
@@ -38,7 +38,7 @@ public interface UserService extends UserDetailsService {
 	public User findByConfirmationToken(String token);
 
 	public UserDetail findDetailByDisplayName(String displayName);
-	
+
 	public void updatePassword(String username, String password);
 
 	public void remove(User user);
@@ -48,10 +48,10 @@ public interface UserService extends UserDetailsService {
 	public List<User> searchUser(String currentUsername, String username);
 
 	public void updateUserDetail(UserDetail detail);
-	
+
 	public UserDetail findDetailById(int id);
-	
+
 	public int getUserIdFromQuest(Quest quest);
-	
+
 	public List<UserDetail> getUsersByQuests();
 }

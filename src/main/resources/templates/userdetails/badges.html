@@ -21,17 +21,19 @@
 
 	<div style="margin-left: 20%; margin-top: 5%;"
 		class="mainbox col-md-7 col-md-offset-6 col-sm-10 col-sm-offset-6 border border-black bg-success">
-<!-- Display badges-->
+		<!-- Display badges-->
 
-	<div th:each="badge : ${badges}">
-		<h3 class="font-weight-bold text-light" th:text="${badge.name}" > </h3>
-		<img class="border border-black" width="40" height="40"
-					th:src="@{'/badge-photos/' + ${badge.picture}}" />
-		<p class="font-weight-bold text-light" th:text="${badge.description}" />
-		<hr>
-	</div>
-		
-		<a class="text-light" th:href="@{/userdata/listDetail}">Back to profile</a>
+		<div th:each="badge : ${badges}">
+			<h3 class="font-weight-bold text-light" th:text="${badge.name}">
+			</h3>
+			<img class="border border-black" width="40" height="40"
+				th:src="@{'/badge-photos/' + ${badge.picture}}" />
+			<p class="font-weight-bold text-light" th:text="${badge.description}" />
+			<hr>
+		</div>
+
+		<a class="text-light" th:href="@{/userdata/listDetail}">Back to
+			profile</a>
 
 	</div>
 

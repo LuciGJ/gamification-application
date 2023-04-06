@@ -14,25 +14,25 @@ import jakarta.activation.MimetypesFileTypeMap;
 public class FileUploadUtil {
 
 	// utility class used to handle file upload
-	
+
 	public static void saveFile(String uploadDir, String fileName, MultipartFile multipartFile) throws IOException {
 		Path uploadPath = Paths.get(uploadDir);
 
 		// create directory if it does not exist
-		
+
 		if (!Files.exists(uploadPath)) {
 			Files.createDirectories(uploadPath);
 		}
 		Path filePath = uploadPath.resolve(fileName);
 		String mimetype = new MimetypesFileTypeMap().getContentType(filePath.toFile());
 		String type = mimetype.split("/")[0];
-		
+
 		// check if the file is an image, if not throw an exception
-		
+
 		if (type.equals("image")) {
-			
+
 			// copy the file
-			
+
 			try (InputStream inputStream = multipartFile.getInputStream()) {
 
 				Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
@@ -44,7 +44,6 @@ public class FileUploadUtil {
 		}
 	}
 
-	
 	// method to get the file's extension by returning everything starting from "."
 	public static String getFileExtension(String name) {
 		int lastIndexOf = name.lastIndexOf(".");

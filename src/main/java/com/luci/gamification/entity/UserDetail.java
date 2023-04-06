@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 public class UserDetail {
 
 	// map UserDetail objects to user_detail table
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -26,18 +26,18 @@ public class UserDetail {
 
 	@Column(name = "badge_id")
 	private int badgeId;
-	
+
 	@Column(name = "tokens")
 	private int tokens;
-	
+
 	@Column(name = "quests")
 	private int quests;
-	
+
 	@Column(name = "image")
 	private String image;
 
 	// constructors
-	
+
 	public UserDetail() {
 	}
 
@@ -51,8 +51,7 @@ public class UserDetail {
 	}
 
 	// getters and setters
-	
-	
+
 	public int getId() {
 		return id;
 	}
@@ -109,5 +108,4 @@ public class UserDetail {
 		this.image = image;
 	}
 
-	
 }

@@ -8,7 +8,7 @@ import jakarta.validation.ConstraintValidatorContext;
 public class EqualFieldsValidator implements ConstraintValidator<ValidEqualFields, Object> {
 
 	// check if two fields are equal, used for password confirmation
-	
+
 	private String firstField;
 	private String secondField;
 	private String message;
@@ -28,7 +28,7 @@ public class EqualFieldsValidator implements ConstraintValidator<ValidEqualField
 		boolean valid = firstValue == secondValue || firstValue.equals(secondValue);
 
 		// if they are not equal display a message
-		
+
 		if (!valid) {
 			context.buildConstraintViolationWithTemplate(message).addPropertyNode(firstField).addConstraintViolation()
 					.disableDefaultConstraintViolation();

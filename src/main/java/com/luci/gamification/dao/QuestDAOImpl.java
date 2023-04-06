@@ -25,7 +25,7 @@ public class QuestDAOImpl implements QuestDAO {
 		Session session = entityManager.unwrap(Session.class);
 		Query<Quest> query = session.createQuery("from Quest where approved = :approved", Quest.class);
 		// set approved based on the boolean's value
-		if(approved) {
+		if (approved) {
 			query.setParameter("approved", 1);
 		} else {
 			query.setParameter("approved", 0);
@@ -46,7 +46,7 @@ public class QuestDAOImpl implements QuestDAO {
 		Query<Quest> query = session.createQuery("from Quest where creatorId = :id", Quest.class);
 
 		query.setParameter("id", creatorId);
-	
+
 		List<Quest> quests;
 		try {
 			quests = query.getResultList();
@@ -74,14 +74,14 @@ public class QuestDAOImpl implements QuestDAO {
 	public void save(Quest quest) {
 		Session session = entityManager.unwrap(Session.class);
 		session.merge(quest);
-		
+
 	}
 
 	@Override
 	public void delete(Quest quest) {
 		Session session = entityManager.unwrap(Session.class);
 		session.remove(quest);
-		
+
 	}
 
 	@Override
@@ -97,8 +97,5 @@ public class QuestDAOImpl implements QuestDAO {
 		}
 		return quest;
 	}
-
-	
-
 
 }

@@ -9,7 +9,7 @@ import jakarta.validation.ConstraintValidatorContext;
 public class EmailValidator implements ConstraintValidator<ValidEmail, String> {
 
 	// validate the email by checking if it is not null and it matches a pattern
-	
+
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {
 		if (value == null) {

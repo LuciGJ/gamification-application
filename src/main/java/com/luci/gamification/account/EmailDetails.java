@@ -1,16 +1,17 @@
 package com.luci.gamification.account;
 
 public class EmailDetails {
-	
-	// class to store email information
-	
-    private String recipient;
-    private String msgBody;
-    private String subject;
 
-    // constructors
-    
-	public EmailDetails() {}
+	// class to store email information
+
+	private String recipient;
+	private String msgBody;
+	private String subject;
+
+	// constructors
+
+	public EmailDetails() {
+	}
 
 	public EmailDetails(String recipient, String msgBody, String subject) {
 		this.recipient = recipient;
@@ -20,7 +21,7 @@ public class EmailDetails {
 	}
 
 	// getters and setters
-	
+
 	public String getRecipient() {
 		return recipient;
 	}
@@ -45,7 +46,4 @@ public class EmailDetails {
 		this.subject = subject;
 	}
 
-
-    
-    
 }

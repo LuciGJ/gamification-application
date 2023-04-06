@@ -14,8 +14,9 @@ import jakarta.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface ValidEmail {
-	
-	// annotation to check if the email is valid, validated using the EmailValidator class
+
+	// annotation to check if the email is valid, validated using the EmailValidator
+	// class
 
 	String message() default "The email is not valid";
 

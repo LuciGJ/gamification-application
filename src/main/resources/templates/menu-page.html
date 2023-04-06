@@ -23,13 +23,13 @@
 	<div style="margin-left: 35%; margin-top: 5%;"
 		class="mainbox col-md-2 col-md-offset-1 col-sm-5 col-sm-offset-1 border border-black bg-light">
 		<!-- welcome message which gets the username from Spring Security-->
-		
+
 		<h3 class="font-weight-bold">
 			Welcome, <span sec:authentication="name"></span>
 		</h3>
 
 		<hr>
-<!-- button for admins only-->
+		<!-- button for admins only-->
 
 		<div sec:authorize="hasRole('ROLE_ADMIN')">
 
@@ -40,14 +40,12 @@
 		</div>
 
 		<a class="btn btn-success col-10" th:href="@{/account/listOptions}">Manage
-			account</a> <br>
-		<br> <a class="btn btn-success col-10"
-			th:href="@{/userdata/listDetail}">Profile</a> <br>
-		<br> <a class="btn btn-success col-10"
-			th:href="@{/quest/listQuests}">Quests</a> <br>
-		<br> <a class="btn btn-success col-10"
+			account</a> <br> <br> <a class="btn btn-success col-10"
+			th:href="@{/userdata/listDetail}">Profile</a> <br> <br> <a
+			class="btn btn-success col-10" th:href="@{/quest/listQuests}">Quests</a>
+		<br> <br> <a class="btn btn-success col-10"
 			th:href="@{/leaderboard/viewLeaderboard}">Leaderboard</a> <br>
-		
+
 		<form action="#" th:action="@{/logout}" method="POST">
 
 			<input type="submit" value="Logout"

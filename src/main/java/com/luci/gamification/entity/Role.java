@@ -18,7 +18,7 @@ import jakarta.persistence.Table;
 public class Role {
 
 	// map Role objects to role table
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -32,7 +32,7 @@ public class Role {
 	private Collection<User> users;
 
 	// constructors
-	
+
 	public Role() {
 	}
 
@@ -41,7 +41,7 @@ public class Role {
 	}
 
 	// getters and setters
-	
+
 	public Long getId() {
 		return id;
 	}

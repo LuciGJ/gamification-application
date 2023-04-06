@@ -1,6 +1,5 @@
 package com.luci.gamification.service;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +14,12 @@ import com.luci.gamification.entity.Submission;
 public class SubmissionServiceImpl implements SubmissionService {
 
 	// the implementation of the SubmissionService interface
-	
+
 	@Autowired
 	SubmissionDAO submissionDAO;
 
 	// delegate methods
-	
+
 	@Transactional
 	@Override
 	public List<Submission> findSubmissionsByQuest(int questId) {
@@ -30,7 +29,7 @@ public class SubmissionServiceImpl implements SubmissionService {
 	@Transactional
 	@Override
 	public void save(Submission submission) {
-		submissionDAO.save(submission);		
+		submissionDAO.save(submission);
 	}
 
 	@Transactional
@@ -38,11 +37,5 @@ public class SubmissionServiceImpl implements SubmissionService {
 	public Submission findSubmissionById(int submissionId) {
 		return submissionDAO.findSubmissionById(submissionId);
 	}
-
-
-	
-	
-	
-	
 
 }

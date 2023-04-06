@@ -14,9 +14,10 @@ import jakarta.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface ValidEqualFields {
-	
-	// annotation to check if two passwords match, validated using the EqualFieldsValidator class
-	
+
+	// annotation to check if two passwords match, validated using the
+	// EqualFieldsValidator class
+
 	String message() default "Passwords do not match";
 
 	Class<?>[] groups() default {};

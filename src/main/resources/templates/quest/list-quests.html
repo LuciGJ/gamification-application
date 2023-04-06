@@ -22,13 +22,13 @@
 	<div class="container border border-black bg-success"
 		style="margin-top: 5%;">
 
-		<h3 class ="font-weight-bold text-light">Quests</h3>
+		<h3 class="font-weight-bold text-light">Quests</h3>
 		<hr>
 		<a th:href="@{/quest/addQuestForm}"
-			class="btn btn-primary btn-sm mr-5 mb-3"> Add quest </a>
-		<a th:href="@{/quest/userSubmissions}"
-			class="btn btn-primary btn-sm mr-5 mb-3"> My submissions </a>
-		<a th:href="@{/quest/userQuests}"
+			class="btn btn-primary btn-sm mr-5 mb-3"> Add quest </a> <a
+			th:href="@{/quest/userSubmissions}"
+			class="btn btn-primary btn-sm mr-5 mb-3"> My submissions </a> <a
+			th:href="@{/quest/userQuests}"
 			class="btn btn-primary btn-sm mr-5 mb-3"> My quests </a>
 
 
@@ -38,41 +38,45 @@
 				<tr>
 					<th>Name</th>
 					<th>Status</th>
-				<th sec:authorize="hasRole('ROLE_ADMIN')">
-					Action
-				</th>
+					<th sec:authorize="hasRole('ROLE_ADMIN')">Action</th>
 				</tr>
 			</thead>
 
 			<tbody>
-				<tr th:each="quest, iterStat: ${quests}">
+				<tr th:each="quest, iterStat: ${quests.content}">
 
-					<td>
-					<a class ="font-weight-bold text-light" th:href="@{/quest/questDetails(questId=${quest.id})}" th:text="${quest.name}"></a>
-					
-					</td>
-					
-					<td th:switch="${status[iterStat.index]}">
-					 	<p class ="font-weight-bold text-light" th:case="3">Not submitted</p>
-					 	<p class ="font-weight-bold text-light" th:case="0">Submitted</p>
-					 	<p style ="color:blue;" th:case="1">Accepted</p>
-						<p style ="color:red;" th:case="2">Rejected</p>
-					
+					<td><a class="font-weight-bold text-light"
+						th:href="@{/quest/questDetails(questId=${quest.id})}"
+						th:text="${quest.name}"></a></td>
+
+					<td th:switch="${status.content[iterStat.index]}">
+						<p class="font-weight-bold text-light" th:case="3">Not
+							submitted</p>
+						<p class="font-weight-bold text-light" th:case="0">Submitted</p>
+						<p style="color: blue;" th:case="1">Accepted</p>
+						<p style="color: red;" th:case="2">Rejected</p>
+
 					</td>
 
-					<td sec:authorize="hasRole('ROLE_ADMIN')">
-					 	<a th:href="@{/admin/deleteQuest(questId=${quest.id})}"
+					<td sec:authorize="hasRole('ROLE_ADMIN')"><a
+						th:href="@{/admin/deleteQuest(questId=${quest.id})}"
 						class="btn btn-danger btn-sm"
 						onclick="if (!(confirm('Are you sure you want to delete this quest?'))) return false">
-							Delete </a>
-					</td>
-					
+							Delete </a></td>
+
 
 				</tr>
 			</tbody>
 		</table>
+		<div th:if="${quests.totalPages > 0}" class="pagination"
+    th:each="pageNumber : ${pageNumbers}">
+    <a style = "color: white;" th:href="@{/quest/listQuests(page=${pageNumber})}"
+        th:text=${pageNumber}
+        th:class="${pageNumber==quests.number + 1} ? active"></a>
+</div>
 		<hr>
-		<a class ="font-weight-bold text-light" th:href="@{/menu}">Back to menu</a>
+		<a class="font-weight-bold text-light" th:href="@{/menu}">Back to
+			menu</a>
 
 	</div>
 

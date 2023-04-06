@@ -45,7 +45,7 @@
 
 				<div style="padding-top: 30px" class="panel-body">
 
-<!-- form to get the email for username recovery -->
+					<!-- form to get the email for username recovery -->
 
 					<form th:action="@{/recovery/forgotUsernameProcess}"
 						th:object="${email}" method="POST" class="form-horizontal">
@@ -54,7 +54,7 @@
 						<div class="form-group">
 							<div class="col-xs-15">
 								<div>
-<!-- display errors -->
+									<!-- display errors -->
 
 									<div th:if="${emailError}"
 										class="alert alert-danger col-xs-offset-1 col-xs-10">

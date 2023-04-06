@@ -23,7 +23,7 @@
 
 		<h3 class="font-weight-bold text-light">Accounts</h3>
 		<hr>
-<!-- form to search the users list-->
+		<!-- form to search the users list-->
 		<form th:action="@{/admin/search}" class="form-inline">
 
 			<input class="form-control ml-1 mr-sm-2 mb-3" type="search"
@@ -32,11 +32,11 @@
 			<button class="btn btn-primary mb-3" type="submit">Search</button>
 		</form>
 
-<!-- table to display accounts and actions-->
+		<!-- table to display accounts and actions-->
 		<table class="table table-bordered table-striped">
 			<thead class="thead-light">
 				<tr>
-					<th >Id</th>
+					<th>Id</th>
 					<th>Username</th>
 					<th>Active</th>
 					<th>Action</th>
@@ -48,9 +48,10 @@
 
 					<td class="font-weight-bold text-light" th:text="${user.id}" />
 					<td class="font-weight-bold text-light" th:text="${user.username}" />
-					<td class="font-weight-bold text-light" th:text="${user.enabled eq 1} ? 'true' : 'false'" />
+					<td class="font-weight-bold text-light"
+						th:text="${user.enabled eq 1} ? 'true' : 'false'" />
 
-<!-- if user is suspended show options to unsuspend, else show option to suspend-->
+					<!-- if user is suspended show options to unsuspend, else show option to suspend-->
 					<td>
 						<div th:if="${user.suspended} eq 0">
 							<a th:href="@{/admin/suspendUser(userId=${user.id})}"
@@ -76,9 +77,9 @@
 			</tbody>
 		</table>
 		<hr>
-		<a class="font-weight-bold text-light" th:href="@{/menu}">Back to menu</a>
-		<br>
-<a class="font-weight-bold text-light" th:href="@{/admin/submissionsPage}">To quest submissions</a>
+		<a class="font-weight-bold text-light" th:href="@{/menu}">Back to
+			menu</a> <br> <a class="font-weight-bold text-light"
+			th:href="@{/admin/submissionsPage}">To quest submissions</a>
 	</div>
 
 </body>

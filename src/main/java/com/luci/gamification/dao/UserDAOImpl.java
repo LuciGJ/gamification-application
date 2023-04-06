@@ -22,15 +22,13 @@ import jakarta.persistence.EntityManager;
 public class UserDAOImpl implements UserDAO {
 
 	// the implementation of the UserDAO interface
-	
-	
+
 	// used to access the database
 	@Autowired
 	EntityManager entityManager;
 
 	// methods used to find users by specific information or to manipulate them
-	
-	
+
 	// the methods used for finding the user are similar
 	// create a session, execute a parameterized query and return the result
 	@Override
@@ -46,8 +44,6 @@ public class UserDAOImpl implements UserDAO {
 		}
 		return user;
 	}
-
-	
 
 	@Override
 	public User findUserByEmail(String email) {
@@ -108,8 +104,7 @@ public class UserDAOImpl implements UserDAO {
 
 		return user;
 	}
-	
-	
+
 	@Override
 	public User findUserById(int id) {
 		Session session = entityManager.unwrap(Session.class);
@@ -123,8 +118,9 @@ public class UserDAOImpl implements UserDAO {
 		}
 		return user;
 	}
-	
-	// save the user by getting a session and calling merge on it (which will save or update the user)
+
+	// save the user by getting a session and calling merge on it (which will save
+	// or update the user)
 	@Override
 	public void save(User user) {
 		Session session = entityManager.unwrap(Session.class);
@@ -133,19 +129,18 @@ public class UserDAOImpl implements UserDAO {
 
 	}
 
-	
 	// method used to delete the user and the profile picture associated with it
 	@Override
 	public void delete(User user) {
 		String picturesDir = "user-photos/";
-	
+
 		try {
 			Path deleteFile;
 			deleteFile = Paths.get(picturesDir + user.getId() + ".png");
 			Files.deleteIfExists(deleteFile);
 			deleteFile = Paths.get(picturesDir + user.getId() + ".jpg");
 			Files.deleteIfExists(deleteFile);
-		
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -156,8 +151,6 @@ public class UserDAOImpl implements UserDAO {
 
 	}
 
-	
-	
 	// find all users expect the authenticated one
 	@Override
 	public List<User> findAllUsers(String username) {
@@ -173,10 +166,11 @@ public class UserDAOImpl implements UserDAO {
 		return users;
 	}
 
-
 	// method used to search users by username
-	// the username is placed between %, which means that it will return the results that contain the username (by using the like function, % means anything before and after the username)
-	
+	// the username is placed between %, which means that it will return the results
+	// that contain the username (by using the like function, % means anything
+	// before and after the username)
+
 	@Override
 	public List<User> searchUser(String username) {
 		username = "%" + username.toLowerCase() + "%";
@@ -192,12 +186,12 @@ public class UserDAOImpl implements UserDAO {
 		return users;
 	}
 
-
 	// find user by display name
 	@Override
 	public UserDetail findUserDetailByDisplayName(String displayName) {
 		Session session = entityManager.unwrap(Session.class);
-		Query<UserDetail> query = session.createQuery("from UserDetail where displayName = :displayName", UserDetail.class);
+		Query<UserDetail> query = session.createQuery("from UserDetail where displayName = :displayName",
+				UserDetail.class);
 		query.setParameter("displayName", displayName);
 		UserDetail user;
 		try {
@@ -209,17 +203,13 @@ public class UserDAOImpl implements UserDAO {
 		return user;
 	}
 
-
-
 	@Override
 	public void updateDetail(UserDetail detail) {
 		Session session = entityManager.unwrap(Session.class);
-		
+
 		session.merge(detail);
-		
+
 	}
-
-
 
 	@Override
 	public UserDetail findDetailById(int id) {
@@ -236,12 +226,11 @@ public class UserDAOImpl implements UserDAO {
 		return user;
 	}
 
-
-
 	@Override
 	public int getUserIdFromQuest(Quest quest) {
 		Session session = entityManager.unwrap(Session.class);
-		Query<Integer> query =  session.createQuery("select quest.userId from Quest quest where quest.id = : id", Integer.class);
+		Query<Integer> query = session.createQuery("select quest.userId from Quest quest where quest.id = : id",
+				Integer.class);
 		query.setParameter("id", quest.getId());
 		int id;
 		try {
@@ -249,16 +238,15 @@ public class UserDAOImpl implements UserDAO {
 		} catch (Exception e) {
 			id = 0;
 		}
-		
+
 		return id;
 	}
-
-
 
 	@Override
 	public List<UserDetail> getUsersByQuests() {
 		Session session = entityManager.unwrap(Session.class);
-		Query<UserDetail> query = session.createQuery("from UserDetail order by quests desc, displayName asc", UserDetail.class);
+		Query<UserDetail> query = session.createQuery("from UserDetail order by quests desc, displayName asc",
+				UserDetail.class);
 		List<UserDetail> users;
 		try {
 			users = query.getResultList();

@@ -38,7 +38,7 @@ public class AccountManagementController {
 
 	@Autowired
 	EmailService emailService;
-	
+
 	// remove whitespace before and after string
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -49,14 +49,14 @@ public class AccountManagementController {
 	}
 
 	// display options page
-	
+
 	@GetMapping("/listOptions")
 	public String listOptions() {
 		return "account/account-options-page";
 	}
 
 	// change email form
-	
+
 	@GetMapping("/changeEmail")
 	public String changeEmailPage(Model model) {
 
@@ -64,20 +64,18 @@ public class AccountManagementController {
 		return "account/change-email-page";
 	}
 
-	
 	// process change email form
-	
+
 	@PostMapping("/changeEmailProcess")
 	public String changeEmailProcess(@Valid @ModelAttribute("email") Email email, BindingResult bindingResult,
 			Model model, Principal principal, HttpServletRequest request) {
 
 		// check if email is valid
-		
+
 		if (bindingResult.hasErrors()) {
 			return "account/change-email-page";
 		}
 
-		
 		// check if user has given his correct email address
 		User user = userService.findUserByUsername(principal.getName());
 		if (!email.getEmail().equals(user.getEmail())) {
@@ -85,8 +83,9 @@ public class AccountManagementController {
 			model.addAttribute("emailError", "The email address is wrong");
 			return "account/change-email-page";
 		}
-		
-		// create an email change token, generate an email change link and send it to the user
+
+		// create an email change token, generate an email change link and send it to
+		// the user
 		String token;
 		do {
 			token = RandomStringBuilder.buildRandomString(30);
@@ -105,7 +104,6 @@ public class AccountManagementController {
 
 	}
 
-	
 	// form to change the email
 	@GetMapping("/changeEmailForm")
 	public String showNewEmail(@RequestParam("token") String token, HttpServletRequest request, Model model) {
@@ -123,26 +121,22 @@ public class AccountManagementController {
 		return "account/new-email-page";
 	}
 
-	
 	// process new email form
 	@PostMapping("/newEmailProcess")
 	public String newEmailProcess(@Valid @ModelAttribute("email") Email email, BindingResult bindingResult, Model model,
 			Principal principal) {
 
-		
 		// check if the new email is valid
 		if (bindingResult.hasErrors()) {
 			return "account/new-email-page";
 		}
 
-		
 		// check if the email is already taken
 		if (userService.findUserByEmail(email.getEmail()) != null) {
 			model.addAttribute("emailError", "The email already belongs to an account");
 			return "account/new-email-page";
 		}
 
-		
 		// check if the user is logged in
 		User user = userService.findUserByUsername(principal.getName());
 
@@ -156,7 +150,6 @@ public class AccountManagementController {
 			return "account/confirm-management-page";
 		}
 
-		
 		// set the new email
 		user.setEmail(email.getEmail());
 		user.setEmailToken(null);
@@ -173,26 +166,23 @@ public class AccountManagementController {
 		return "account/change-password-form";
 	}
 
-	
 	// process change password form
 	@PostMapping("/changePasswordProcess")
 	public String changePasswordProcess(@Valid @ModelAttribute("resetPassword") ResetPassword resetPassword,
 			BindingResult bindingResult, Model model, Principal principal, BCryptPasswordEncoder passwordEncoder) {
 
-		
 		// check if the password is valid
 		if (bindingResult.hasErrors()) {
 			return "account/change-password-form";
 		}
 
-		
 		// check if the user is logged in
 		User user = userService.findUserByUsername(principal.getName());
 
 		if (user == null) {
 			return "redirect:/login";
 		}
-		
+
 		// encode the password and set it
 		user.setPassword(passwordEncoder.encode(resetPassword.getPassword()));
 		userService.updateUser(user);
@@ -201,7 +191,6 @@ public class AccountManagementController {
 
 	}
 
-	
 	// delete account page
 	@GetMapping("/deleteAccount")
 	public String deleteAccount(Model model) {
@@ -209,7 +198,6 @@ public class AccountManagementController {
 		return "account/delete-account-page";
 	}
 
-	
 	// process delete account form
 	@PostMapping("/deleteAccountProcess")
 	public String deleteAccountProcess(@Valid @ModelAttribute("email") Email email, BindingResult bindingResult,
@@ -220,7 +208,6 @@ public class AccountManagementController {
 			return "account/delete-account-page";
 		}
 
-		
 		// check if the user is logged in
 		User user = userService.findUserByUsername(principal.getName());
 
@@ -234,7 +221,6 @@ public class AccountManagementController {
 			return "account/delete-account-page";
 		}
 
-		
 		// remove user
 		userService.remove(user);
 

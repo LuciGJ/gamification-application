@@ -23,13 +23,13 @@
 
 		<h3 class="font-weight-bold text-light">Submissions</h3>
 		<hr>
-		
-		
+
+
 		<p class="font-weight-bold text-light"
 			th:text="'Answer: ' + ${quest.answer}"></p>
 
 
-<!-- table to display submissions-->
+		<!-- table to display submissions-->
 		<table class="table table-bordered table-striped">
 			<thead class="thead-light">
 				<tr>
@@ -43,27 +43,28 @@
 				<tr th:each="submission, iterStat : ${submissions}">
 
 					<td class="font-weight-bold text-light" th:text="${iterStat.index}" />
-					<td class="font-weight-bold text-light" th:text="${submission.answer}" />
-					
-					<td>
-					 <a th:href="@{/quest/acceptSubmission(submissionId=${submission.id})}"
+					<td class="font-weight-bold text-light"
+						th:text="${submission.answer}" />
+
+					<td><a
+						th:href="@{/quest/acceptSubmission(submissionId=${submission.id})}"
 						class="btn btn-primary btn-sm"
 						onclick="if (!(confirm('Are you sure you want to accept this submission?'))) return false">
-							Accept </a>
-							
-							 <a th:href="@{/quest/rejectSubmission(submissionId=${submission.id})}"
+							Accept </a> <a
+						th:href="@{/quest/rejectSubmission(submissionId=${submission.id})}"
 						class="btn btn-danger btn-sm"
 						onclick="if (!(confirm('Are you sure you want to reject this submission?'))) return false">
-							Reject </a>
-					</td> 
-					
-				
+							Reject </a></td>
+
+
 
 				</tr>
 			</tbody>
 		</table>
 		<hr>
-		<a class="font-weight-bold text-light" th:href="@{'/quest/questDetails?questId=' + ${quest.id}}">Back to quest</a>
+		<a class="font-weight-bold text-light"
+			th:href="@{'/quest/questDetails?questId=' + ${quest.id}}">Back to
+			quest</a>
 
 	</div>
 

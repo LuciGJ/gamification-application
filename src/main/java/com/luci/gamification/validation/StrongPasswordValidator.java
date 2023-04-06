@@ -8,8 +8,9 @@ import jakarta.validation.ConstraintValidatorContext;
 
 public class StrongPasswordValidator implements ConstraintValidator<StrongPassword, String> {
 
-	// validate the password's strength by checking if it is not null and if it matches a pattern
-	
+	// validate the password's strength by checking if it is not null and if it
+	// matches a pattern
+
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {
 		if (value == null) {

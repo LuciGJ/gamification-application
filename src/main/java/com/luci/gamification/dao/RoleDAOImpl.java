@@ -13,11 +13,10 @@ import jakarta.persistence.EntityManager;
 public class RoleDAOImpl implements RoleDAO {
 
 	// the implementation of the RoleDAO interface
-	
+
 	@Autowired
 	EntityManager entityManager;
 
-	
 	// similar to the logic used in the UserDAOImpl class
 	// get a session, create a parameterized query and return the result
 	@Override

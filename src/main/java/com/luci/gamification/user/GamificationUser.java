@@ -11,7 +11,7 @@ import jakarta.validation.constraints.Size;
 public class GamificationUser {
 
 	// class used to validate the user data during registration
-	
+
 	@NotNull(message = "Username is required")
 	@Size(min = 1, max = 30, message = "Please choose an username between 1 and 30 characters")
 	private String username;
@@ -30,13 +30,13 @@ public class GamificationUser {
 	private String email;
 
 	// constructor
-	
+
 	public GamificationUser() {
 
 	}
 
 	// getters and setters
-	
+
 	public String getUsername() {
 		return username;
 	}

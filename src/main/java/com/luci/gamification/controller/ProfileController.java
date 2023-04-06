@@ -19,33 +19,31 @@ public class ProfileController {
 
 	@Autowired
 	UserService userService;
-	
+
 	@Autowired
 	BadgeService badgeService;
-	
+
 	@GetMapping("/viewProfile")
 	public String viewProfile(@RequestParam("displayName") String displayName, Model model) {
-		
+
 		// get the user details using the display name
 		UserDetail userDetail = userService.findDetailByDisplayName(displayName);
-		
+
 		// if null then the profile does not exist, redirect to leaderboard
-		
-		if(userDetail == null) {
+
+		if (userDetail == null) {
 			return "redirect:/leaderboard/viewLeaderboard";
 		}
-		
+
 		// get displayed badge
-		
+
 		Badge badge = badgeService.findBadgeById(userDetail.getBadgeId());
-		
+
 		model.addAttribute("userDetail", userDetail);
 		model.addAttribute("badge", badge);
-		
+
 		return "profile/profile";
-		
 
 	}
-	
-	
+
 }

@@ -4,15 +4,15 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class Username {
-	
+
 	// class to store username
-	
+
 	@NotNull(message = "Username is required")
 	@Size(min = 1, message = "Username is required")
 	private String username;
 
 	// constructors
-	
+
 	public Username() {
 	}
 
@@ -21,7 +21,7 @@ public class Username {
 	}
 
 	// getters and setters
-	
+
 	public String getUsername() {
 		return username;
 	}

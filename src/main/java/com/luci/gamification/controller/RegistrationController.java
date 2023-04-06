@@ -25,14 +25,13 @@ import jakarta.validation.Valid;
 public class RegistrationController {
 
 	// controller used to handle the registration
-	
+
 	@Autowired
 	private UserService userService;
 
 	@Autowired
 	private EmailService emailService;
 
-	
 	// remove the whitespace from both ends of strings
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -49,8 +48,8 @@ public class RegistrationController {
 		return "registration-page";
 	}
 
-	
-	// process the registration form, get the input from the GamificationUser in the Model
+	// process the registration form, get the input from the GamificationUser in the
+	// Model
 	@PostMapping("/registrationProcess")
 	public String registrationProcess(@Valid @ModelAttribute("user") GamificationUser user, BindingResult bindingResult,
 			Model model, HttpServletRequest request) {
@@ -58,12 +57,11 @@ public class RegistrationController {
 		String username = user.getUsername();
 
 		// if there were errors doing validation display them
-		
+
 		if (bindingResult.hasErrors()) {
 			return "registration-page";
 		}
 
-		
 		// check if the username is already taken, if it is display a message
 		User exists = userService.findUserByUsername(username);
 		if (exists != null) {
@@ -72,7 +70,6 @@ public class RegistrationController {
 			return "registration-page";
 		}
 
-		
 		// check if the email is already taken, if it is display a message
 		exists = userService.findUserByEmail(user.getEmail());
 
@@ -81,7 +78,7 @@ public class RegistrationController {
 			model.addAttribute("registrationError", "Email already used");
 			return "registration-page";
 		}
-		
+
 		// if everything is fine save the user
 
 		userService.saveUser(user, emailService, request);

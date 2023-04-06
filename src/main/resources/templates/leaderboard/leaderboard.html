@@ -25,7 +25,7 @@
 		<hr>
 
 
-<!-- table to display the leaderboard-->
+		<!-- table to display the leaderboard-->
 		<table class="table table-bordered table-striped">
 			<thead class="thead-light">
 				<tr>
@@ -37,16 +37,18 @@
 
 			<tbody>
 				<tr th:each="user, iterStat : ${users}">
-					<td class="font-weight-bold text-light" th:text="${rankings[iterStat.index]}" />
-					<td> 
-						<a class ="font-weight-bold text-light" th:href="@{/profile/viewProfile(displayName=${user.displayName})}" th:text="${user.displayName}"></a>
-					</td>
+					<td class="font-weight-bold text-light"
+						th:text="${rankings[iterStat.index]}" />
+					<td><a class="font-weight-bold text-light"
+						th:href="@{/profile/viewProfile(displayName=${user.displayName})}"
+						th:text="${user.displayName}"></a></td>
 					<td class="font-weight-bold text-light" th:text="${user.quests}" />
 				</tr>
 			</tbody>
 		</table>
 		<hr>
-		<a class="font-weight-bold text-light" th:href="@{/menu}">Back to menu</a>
+		<a class="font-weight-bold text-light" th:href="@{/menu}">Back to
+			menu</a>
 
 	</div>
 

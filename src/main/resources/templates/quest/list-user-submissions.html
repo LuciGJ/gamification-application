@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-	
+
 
 <head>
 
@@ -22,9 +22,9 @@
 	<div class="container border border-black bg-success"
 		style="margin-top: 5%;">
 
-		<h3 class ="font-weight-bold text-light">Submissions</h3>
+		<h3 class="font-weight-bold text-light">Submissions</h3>
 		<hr>
-		
+
 
 
 
@@ -41,28 +41,32 @@
 			<tbody>
 				<tr th:each="submission, iterStat: ${submissions}">
 
-					<td>
-					<a th:if="${quests[iterStat.index].id} != -1" class ="font-weight-bold text-light" th:href="@{/quest/questDetails(questId=${quests[iterStat.index].id})}" th:text="${quests[iterStat.index].name}"></a>
-					<p th:if="${quests[iterStat.index].id} == -1" class ="font-weight-bold text-light" >N/A</p>
-					</td>
-					
-					<td class="font-weight-bold text-light" th:text="${submission.answer}" />
-					
+					<td><a th:if="${quests[iterStat.index].id} != -1"
+						class="font-weight-bold text-light"
+						th:href="@{/quest/questDetails(questId=${quests[iterStat.index].id})}"
+						th:text="${quests[iterStat.index].name}"></a>
+						<p th:if="${quests[iterStat.index].id} == -1"
+							class="font-weight-bold text-light">N/A</p></td>
+
+					<td class="font-weight-bold text-light"
+						th:text="${submission.answer}" />
+
 					<td th:switch="${submission.status}">
-					 	<p class ="font-weight-bold text-light" th:case="0">Submitted</p>
-					 	<p style ="color:blue;" th:case="1">Accepted</p>
-						<p style ="color:red;" th:case="2">Rejected</p>
-					
+						<p class="font-weight-bold text-light" th:case="0">Submitted</p>
+						<p style="color: blue;" th:case="1">Accepted</p>
+						<p style="color: red;" th:case="2">Rejected</p>
+
 					</td>
 
-		
-					
+
+
 
 				</tr>
 			</tbody>
 		</table>
 		<hr>
-		<a class ="font-weight-bold text-light" th:href="@{/quest/listQuests}">Back to quests</a>
+		<a class="font-weight-bold text-light" th:href="@{/quest/listQuests}">Back
+			to quests</a>
 
 	</div>
 

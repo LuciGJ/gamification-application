@@ -1,6 +1,5 @@
 package com.luci.gamification.service;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -14,13 +13,12 @@ import com.luci.gamification.entity.Badge;
 public class BadgeServiceImpl implements BadgeService {
 
 	// the implementation of the BadgeService interface
-	
+
 	@Autowired
 	BadgeDAO badgeDAO;
 
-	
 	// delegate methods
-	
+
 	@Transactional
 	@Override
 	public Badge findBadgeByName(String name) {
@@ -39,13 +37,13 @@ public class BadgeServiceImpl implements BadgeService {
 		Badge badge = new Badge();
 		badge.setName(newBadge.getBadgeName());
 		badge.setDescription(newBadge.getBadgeDescription());
-		if(newBadge.getPicture() == null) {
+		if (newBadge.getPicture() == null) {
 			badge.setPicture("badge.png");
 		} else {
 			badge.setPicture(newBadge.getPicture());
 		}
 		return badgeDAO.save(badge);
-		
+
 	}
 
 	@Transactional
@@ -58,8 +56,7 @@ public class BadgeServiceImpl implements BadgeService {
 	@Override
 	public void delete(Badge badge) {
 		badgeDAO.delete(badge);
-		
+
 	}
-	
 
 }

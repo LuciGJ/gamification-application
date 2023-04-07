@@ -44,8 +44,13 @@
 
 			<tbody>
 				<tr th:each="quest, iterStat : ${quests}">
-					<td><a class="font-weight-bold text-light"
-						th:href="@{/quest/questDetails(questId=${quest.id})}"
+					<td th:if="${submissions[iterStat.index]} == 0"><a
+						class="font-weight-bold text-light"
+						th:href="@{/quest/listSubmissions(questId=${quest.id})}"
+						th:text="${quest.name}"></a></td>
+					<td th:if="${submissions[iterStat.index]} == 1"><a
+						class="font-weight-bold text-danger"
+						th:href="@{/quest/listSubmissions(questId=${quest.id})}"
 						th:text="${quest.name}"></a></td>
 					<td class="font-weight-bold text-light"
 						th:text="${quest.description}" />

@@ -18,5 +18,7 @@ public interface QuestDAO {
 	public void save(Quest quest);
 
 	public void delete(Quest quest);
+	
+	public List<Quest> searchQuest(String name);
 
 }

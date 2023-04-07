@@ -99,4 +99,18 @@ public class QuestServiceImpl implements QuestService {
         return bookPage;
     }
 
+	@Transactional
+	@Override
+	public List<Quest> searchQuests(String name) {
+		List<Quest> results = null;
+		
+		if (name != null && (name.trim().length() > 0)) {
+			results = questDAO.searchQuest(name);
+		} else {
+			results = questDAO.findQuestsByApproval(true);
+		}
+
+		return results;
+	}
+
 }

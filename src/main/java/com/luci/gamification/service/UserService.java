@@ -51,7 +51,5 @@ public interface UserService extends UserDetailsService {
 
 	public UserDetail findDetailById(int id);
 
-	public int getUserIdFromQuest(Quest quest);
-
 	public List<UserDetail> getUsersByQuests();
 }

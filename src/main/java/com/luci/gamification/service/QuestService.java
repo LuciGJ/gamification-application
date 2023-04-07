@@ -26,4 +26,6 @@ public interface QuestService {
 	public void update(Quest quest);
 	
 	public Page<Quest> findPaginated(Pageable pageable);
+	
+	public List<Quest> searchQuests(String name);
 }

@@ -38,6 +38,7 @@ import com.luci.gamification.service.SubmissionService;
 import com.luci.gamification.service.UserService;
 import com.luci.gamification.submission.GamificationSubmission;
 import com.luci.gamification.utility.FileUploadUtil;
+import com.luci.gamification.utility.QuestFilter;
 
 import jakarta.validation.Valid;
 
@@ -69,21 +70,38 @@ public class QuestController {
 	}
 
 	@GetMapping("/listQuests")
-	public String listQuests(Model model, Principal principal, @RequestParam("page") Optional<Integer> page)
-			 {
+	public String listQuests(Model model, Principal principal, @RequestParam("page") Optional<Integer> page,
+			@RequestParam("name") Optional<String> name, @RequestParam("submitted") Optional<String> isSubmitted,
+			@RequestParam("notSubmitted") Optional<String> isNotSubmitted,
+			@RequestParam("accepted") Optional<String> isAccepted,
+			@RequestParam("rejected") Optional<String> isRejected) {
 
 		// get all approved quests
 		int currentPage = page.orElse(1);
-		int pageSize = 3;
-		
-		Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
-		currentPage = pageable.getPageNumber();
-		
+		int pageSize = 10;
+		String searchName = name.orElse("");
+		currentPage--;
+
+		QuestFilter filter = new QuestFilter();
+		String submittedString = isSubmitted.orElse("");
+		String notSubmittedString = isNotSubmitted.orElse("");
+		String acceptedString = isAccepted.orElse("");
+		String rejectedString = isRejected.orElse("");
+		if (isSubmitted.isPresent() || isNotSubmitted.isPresent() || isAccepted.isPresent() || isRejected.isPresent()) {
+			filter.setAcceptedByString(acceptedString);
+			filter.setRejectedByString(rejectedString);
+			filter.setSubmittedByString(submittedString);
+			filter.setNotSubmittedByString(notSubmittedString);
+		}
+		filter.setKeyword(searchName);
+
+		model.addAttribute("filter", filter);
+
 //		Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
 //		currentPage = pageable.getPageNumber();
 //		pageSize = pageable.getPageSize();
-		
-		List<Quest> questList = questService.findQuestsByApproval(true);
+
+		List<Quest> questList = questService.searchQuests(searchName);
 
 		// sort quests based on submission status
 		User user = userService.findUserByUsername(principal.getName());
@@ -96,11 +114,6 @@ public class QuestController {
 		List<Quest> accepted = new ArrayList<>();
 		List<Quest> rejected = new ArrayList<>();
 
-		int notSubmittedNumber = 0;
-		int submittedNumber = 0;
-		int acceptedNumber = 0;
-		int rejectedNumber = 0;
-
 		List<Submission> submissions = user.getSubmissionList();
 
 		for (Quest quest : questList) {
@@ -110,13 +123,13 @@ public class QuestController {
 				if (submission.getQuestId() == quest.getId()) {
 					if (submission.getStatus() == 0) {
 						submitted.add(quest);
-						submittedNumber++;
+
 					} else if (submission.getStatus() == 1) {
 						accepted.add(quest);
-						acceptedNumber++;
+
 					} else {
 						rejected.add(quest);
-						rejectedNumber++;
+
 					}
 					added = true;
 					break;
@@ -124,71 +137,66 @@ public class QuestController {
 
 			}
 			if (!added) {
-				notSubmittedNumber++;
+
 				notSubmitted.add(quest);
 			}
 		}
-
-		for (Quest quest : notSubmitted) {
-			quests.add(quest);
+		if (filter.isNotSubmitted()) {
+			for (Quest quest : notSubmitted) {
+				quests.add(quest);
+				statusList.add(3);
+			}
 		}
 
-		for (int i = 0; i < notSubmittedNumber; i++) {
-			statusList.add(3);
+		if (filter.isSubmitted()) {
+			for (Quest quest : submitted) {
+				quests.add(quest);
+				statusList.add(0);
+			}
 		}
 
-		for (Quest quest : submitted) {
-			quests.add(quest);
+		if (filter.isAccepted()) {
+			for (Quest quest : accepted) {
+				quests.add(quest);
+				statusList.add(1);
+			}
 		}
 
-		for (int i = 0; i < submittedNumber; i++) {
-			statusList.add(0);
-		}
-
-		for (Quest quest : accepted) {
-			quests.add(quest);
-		}
-
-		for (int i = 0; i < acceptedNumber; i++) {
-			statusList.add(1);
-		}
-
-		for (Quest quest : rejected) {
-			quests.add(quest);
-		}
-
-		for (int i = 0; i < rejectedNumber; i++) {
-			statusList.add(2);
+		if (filter.isRejected()) {
+			for (Quest quest : rejected) {
+				quests.add(quest);
+				statusList.add(2);
+			}
 		}
 
 		// get current page
-		
+
 		int startItem = currentPage * pageSize;
 		List<Quest> questsOnPage;
 		List<Integer> statusOnPage;
-		
-		if(quests.size() < startItem) {
+
+		if (quests.size() < startItem) {
 			questsOnPage = new ArrayList<>();
 			statusOnPage = new ArrayList<>();
 		} else {
 			int toIndex = Math.min(startItem + pageSize, quests.size());
-            questsOnPage = quests.subList(startItem, toIndex);
-            statusOnPage = statusList.subList(startItem, toIndex);
-            
+			questsOnPage = quests.subList(startItem, toIndex);
+			statusOnPage = statusList.subList(startItem, toIndex);
+
 		}
-	
+
 		// create new object of type Page from list
 
-		Page<Quest> questPage
-        = new PageImpl<Quest>(questsOnPage, PageRequest.of(currentPage, pageSize), quests.size());
-		Page<Integer> statusPage = new PageImpl<Integer>(statusOnPage, PageRequest.of(currentPage , pageSize), statusList.size());
+		Page<Quest> questPage = new PageImpl<Quest>(questsOnPage, PageRequest.of(currentPage, pageSize), quests.size());
+		Page<Integer> statusPage = new PageImpl<Integer>(statusOnPage, PageRequest.of(currentPage, pageSize),
+				statusList.size());
 		// get all pages
 
 		int totalPages = questPage.getTotalPages();
-		
+
 		if (totalPages > 0) {
 			List<Integer> pageNumbers = new ArrayList<>();
-			for (int i = 1; i <= totalPages ; i++) {
+			for (int i = 1; i <= totalPages; i++) {
 				pageNumbers.add(i);
 			}
 			model.addAttribute("pageNumbers", pageNumbers);
@@ -442,7 +450,11 @@ public class QuestController {
 		newQuest.setName(quest.getName());
 		newQuest.setDescription(quest.getDescription());
 		newQuest.setAnswer(quest.getAnswer());
-		newQuest.setTokens(quest.getTokens());
+		if (badge.isActivated()) {
+			newQuest.setTokens(quest.getTokens() - 100);
+		} else {
+			newQuest.setTokens(quest.getTokens());
+		}
 		newQuest.setApproved(0);
 		if (newBadge != null) {
 			newBadge = badgeService.save(badge);
@@ -545,15 +557,35 @@ public class QuestController {
 
 		List<Quest> quests = user.getQuestList();
 		List<Badge> badges = new ArrayList<>();
-
+		List<Integer> submissions = new ArrayList<>();
+		List<Quest> questsWithSubmissions = new ArrayList<>();
+		List<Quest> questsWithoutSubmissions = new ArrayList<>();
 		// populate the list with the badges from user's quests
 
 		for (Quest quest : quests) {
-			badges.add(badgeService.findBadgeById(quest.getBadgeId()));
+			if (!submissionService.findSubmissionsByQuest(quest.getId()).isEmpty()) {
+				questsWithSubmissions.add(quest);
+			} else {
+				questsWithoutSubmissions.add(quest);
+			}
 		}
 
-		model.addAttribute("quests", quests);
+		List<Quest> sortedQuests = new ArrayList<>();
+		for (Quest quest : questsWithSubmissions) {
+			sortedQuests.add(quest);
+			badges.add(badgeService.findBadgeById(quest.getBadgeId()));
+			submissions.add(1);
+		}
+
+		for (Quest quest : questsWithoutSubmissions) {
+			sortedQuests.add(quest);
+			badges.add(badgeService.findBadgeById(quest.getBadgeId()));
+			submissions.add(0);
+		}
+
+		model.addAttribute("quests", sortedQuests);
 		model.addAttribute("badges", badges);
+		model.addAttribute("submissions", submissions);
 
 		return "quest/list-user-quests";
 	}

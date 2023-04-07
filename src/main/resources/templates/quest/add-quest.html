@@ -48,7 +48,7 @@
 						<li th:each="err : ${#fields.errors('name')}" th:text="${err}" />
 					</ul>
 				</div>
-				<input type="text" maxlength="10" th:field="*{tokens}"
+				<input type="number" step="1" pattern="\d+" maxlength="10" th:field="*{tokens}"
 					class="form-control mb-4 col-4" placeholder="Tokens">
 				<div th:if="${#fields.hasErrors('tokens')}"
 					style="margin-bottom: 25px" class="text-danger">
@@ -77,10 +77,10 @@
 					</ul>
 				</div>
 				<br>
-				<br> <input type="checkbox" th:field="${badge.activated}" /> <label
+				<br> <input type="checkbox" th:field="${badge.activated}" onchange="document.getElementById('bName').disabled = !this.checked; document.getElementById('bDescription').disabled = !this.checked; document.getElementById('bImage').disabled = !this.checked  " /> <label
 					class="font-weight-bold">Add badge(100 additional tokens)</label> <br>
 				<div th:object="${badge}">
-					<input type="text" maxlength="30" th:field="*{badgeName}"
+					<input disabled id="bName" type="text" maxlength="30" th:field="*{badgeName}"
 						class="form-control mb-4 col-4" placeholder="Name">
 					<div th:if="${badge.activated}">
 						<div th:if="${#fields.hasErrors('badgeName')}"
@@ -91,7 +91,7 @@
 							</ul>
 						</div>
 					</div>
-					<textarea placeholder="Description" rows="5" cols="33"
+					<textarea disabled id = "bDescription" placeholder="Description" rows="5" cols="33"
 						maxlength="200" th:field="*{badgeDescription}"> </textarea>
 					<div th:if="${badge.activated}">
 						<div th:if="${#fields.hasErrors('badgeDescription')}"
@@ -103,7 +103,7 @@
 						</div>
 					</div>
 					<br>
-					<br> <input type="file" name="image"
+					<br> <input disabled id = "bImage" type="file" name="image"
 						accept="image/png, image/jpeg" />
 				</div>
 				<br>

@@ -98,4 +98,19 @@ public class QuestDAOImpl implements QuestDAO {
 		return quest;
 	}
 
+	@Override
+	public List<Quest> searchQuest(String name) {
+		name = "%" + name.toLowerCase() + "%";
+		Session session = entityManager.unwrap(Session.class);
+		Query<Quest> query = session.createQuery("from Quest where lower(name) like :name and approved = 1", Quest.class);
+		query.setParameter("name", name);
+		List<Quest> quests;
+		try {
+			quests = query.getResultList();
+		} catch (Exception e) {
+			quests = new ArrayList<>();
+		}
+		return quests;
+	}
+
 }

@@ -226,21 +226,6 @@ public class UserDAOImpl implements UserDAO {
 		return user;
 	}
 
-	@Override
-	public int getUserIdFromQuest(Quest quest) {
-		Session session = entityManager.unwrap(Session.class);
-		Query<Integer> query = session.createQuery("select quest.userId from Quest quest where quest.id = : id",
-				Integer.class);
-		query.setParameter("id", quest.getId());
-		int id;
-		try {
-			id = query.getSingleResult();
-		} catch (Exception e) {
-			id = 0;
-		}
-
-		return id;
-	}
 
 	@Override
 	public List<UserDetail> getUsersByQuests() {

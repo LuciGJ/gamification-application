@@ -31,7 +31,33 @@
 			th:href="@{/quest/userQuests}"
 			class="btn btn-primary btn-sm mr-5 mb-3"> My quests </a>
 
+		<hr>
+		<!-- form to filter the quests list-->
+		<form th:action="@{/quest/listQuests}" class="form-inline">
+			<input class="form-control ml-1 mr-sm-2 mb-3" type="search"
+				name="name" placeholder="Search by name" />
 
+			<p class="font-weight-bold text-light" th:text="'Submitted: '"></p>
+			<input name="submitted"
+				style="margin-bottom: 1.2%; margin-left: 0.5%" type="checkbox"
+				th:checked="${filter.submitted}" />
+			<p style="margin-left: 1%;" class="font-weight-bold text-light"
+				th:text="'Not submitted: '"></p>
+			<input name="notSubmitted"
+				style="margin-bottom: 1.2%; margin-left: 0.5%" type="checkbox"
+				th:checked="${filter.notSubmitted}" />
+			<p style="margin-left: 1%;" class="font-weight-bold text-light"
+				th:text="'Accepted: '"></p>
+			<input name="accepted" style="margin-bottom: 1.2%; margin-left: 0.5%"
+				type="checkbox" th:checked="${filter.accepted}" />
+
+			<p style="margin-left: 1%;" class="font-weight-bold text-light"
+				th:text="'Rejected: '"></p>
+			<input name="rejected" style="margin-bottom: 1.2%; margin-left: 0.5%"
+				type="checkbox" th:checked="${filter.rejected}" />
+			<button style="margin-left: 2%;" class="btn btn-primary mb-3"
+				type="submit">Filter</button>
+		</form>
 
 		<table class="table table-bordered table-striped">
 			<thead class="thead-light">
@@ -68,12 +94,35 @@
 				</tr>
 			</tbody>
 		</table>
-		<div th:if="${quests.totalPages > 0}" class="pagination"
-    th:each="pageNumber : ${pageNumbers}">
-    <a style = "color: white;" th:href="@{/quest/listQuests(page=${pageNumber})}"
-        th:text=${pageNumber}
-        th:class="${pageNumber==quests.number + 1} ? active"></a>
-</div>
+		<div>
+			<a th:if="${quests.totalPages > 1 and quests.number > 0}"
+				style="color: white;"
+				th:href="@{/quest/listQuests(page = 1, name=${filter.keyword}, accepted=${filter.acceptedString}, rejected=${filter.rejectedString}, submitted=${filter.submittedString}, notSubmitted=${filter.notSubmittedString} )}"
+				th:text="'First'"> </a> <a
+				th:if="${quests.totalPages > 1 and quests.number > 0}"
+				style="color: white;"
+				th:href="@{/quest/listQuests(page=${quests.number}, name=${filter.keyword}, accepted=${filter.acceptedString}, rejected=${filter.rejectedString}, submitted=${filter.submittedString}, notSubmitted=${filter.notSubmittedString} )}"
+				th:text="'Previous'"> </a>
+
+			<div th:if="${quests.totalPages > 0}" class="pagination"
+				style="display: inline-block;" th:each="pageNumber : ${pageNumbers}">
+				<a style="color: white;"
+					th:href="@{/quest/listQuests(page=${pageNumber}, name=${filter.keyword}, accepted=${filter.acceptedString}, rejected=${filter.rejectedString}, submitted=${filter.submittedString}, notSubmitted=${filter.notSubmittedString} )}"
+					th:text="${pageNumber}"
+					th:class="${pageNumber==quests.number + 1} ? active"></a>
+			</div>
+			<a
+				th:if="${quests.totalPages > 1 and (quests.number + 1) < quests.totalPages}"
+				style="color: white;"
+				th:href="@{/quest/listQuests(page=${quests.number + 2}, name=${filter.keyword}, accepted=${filter.acceptedString}, rejected=${filter.rejectedString}, submitted=${filter.submittedString}, notSubmitted=${filter.notSubmittedString})}"
+				th:text="'Next'"> </a>
+			<a
+				th:if="${quests.totalPages > 1 and (quests.number + 1) < quests.totalPages}"
+				style="color: white;"
+				th:href="@{/quest/listQuests(page=${quests.totalPages}, name=${filter.keyword}, accepted=${filter.acceptedString}, rejected=${filter.rejectedString}, submitted=${filter.submittedString}, notSubmitted=${filter.notSubmittedString})}"
+				th:text="'Last'"> </a>
+
+		</div>
 		<hr>
 		<a class="font-weight-bold text-light" th:href="@{/menu}">Back to
 			menu</a>

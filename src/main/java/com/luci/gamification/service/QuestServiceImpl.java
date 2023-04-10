@@ -28,6 +28,12 @@ public class QuestServiceImpl implements QuestService {
 
 	@Transactional
 	@Override
+	public List<Quest> findQuestsByApproval(boolean approved, int id) {
+		return questDAO.findQuestsByApproval(approved, id);
+	}
+	
+	@Transactional
+	@Override
 	public List<Quest> findQuestsByApproval(boolean approved) {
 		return questDAO.findQuestsByApproval(approved);
 	}
@@ -79,35 +85,16 @@ public class QuestServiceImpl implements QuestService {
 
 	}
 	
-	@Override
-	public Page<Quest> findPaginated(Pageable pageable) {
-        int pageSize = pageable.getPageSize();
-        int currentPage = pageable.getPageNumber();
-        int startItem = currentPage * pageSize;
-        List<Quest> list;
-        List<Quest> quests = findQuestsByApproval(true);
-        if (quests.size() < startItem) {
-            list = new ArrayList<>();
-        } else {
-            int toIndex = Math.min(startItem + pageSize, quests.size());
-            list = quests.subList(startItem, toIndex);
-        }
-
-        Page<Quest> bookPage
-          = new PageImpl<Quest>(list, PageRequest.of(currentPage, pageSize), quests.size());
-
-        return bookPage;
-    }
 
 	@Transactional
 	@Override
-	public List<Quest> searchQuests(String name) {
+	public List<Quest> searchQuests(String name, int id) {
 		List<Quest> results = null;
 		
 		if (name != null && (name.trim().length() > 0)) {
-			results = questDAO.searchQuest(name);
+			results = questDAO.searchQuest(name, id);
 		} else {
-			results = questDAO.findQuestsByApproval(true);
+			results = questDAO.findQuestsByApproval(true, id);
 		}
 
 		return results;

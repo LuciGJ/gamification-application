@@ -11,6 +11,8 @@ import com.luci.gamification.quest.GamificationQuest;
 
 public interface QuestService {
 	// interface that groups together methods related to quests
+	public List<Quest> findQuestsByApproval(boolean approved, int id);
+	
 	public List<Quest> findQuestsByApproval(boolean approved);
 
 	public List<Quest> findQuestsByCreator(int creatorId);
@@ -25,7 +27,5 @@ public interface QuestService {
 
 	public void update(Quest quest);
 	
-	public Page<Quest> findPaginated(Pageable pageable);
-	
-	public List<Quest> searchQuests(String name);
+	public List<Quest> searchQuests(String name, int id);
 }

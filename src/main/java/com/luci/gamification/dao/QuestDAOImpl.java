@@ -21,6 +21,32 @@ public class QuestDAOImpl implements QuestDAO {
 	EntityManager entityManager;
 
 	@Override
+	public List<Quest> findQuestsByApproval(boolean approved, int id) {
+		Session session = entityManager.unwrap(Session.class);
+		Query<Quest> query = session.createQuery("from Quest where approved = :approved and creatorId != :id",
+				Quest.class);
+		// set approved based on the boolean's value
+		if (approved) {
+			query.setParameter("approved", 1);
+		} else {
+			query.setParameter("approved", 0);
+		}
+
+		// get the quests that are not created by the current user
+
+		query.setParameter("id", id);
+
+		// get the list of quests
+		List<Quest> quests;
+		try {
+			quests = query.getResultList();
+		} catch (Exception e) {
+			quests = new ArrayList<>();
+		}
+		return quests;
+	}
+
+	@Override
 	public List<Quest> findQuestsByApproval(boolean approved) {
 		Session session = entityManager.unwrap(Session.class);
 		Query<Quest> query = session.createQuery("from Quest where approved = :approved", Quest.class);
@@ -30,6 +56,7 @@ public class QuestDAOImpl implements QuestDAO {
 		} else {
 			query.setParameter("approved", 0);
 		}
+
 		// get the list of quests
 		List<Quest> quests;
 		try {
@@ -98,12 +125,16 @@ public class QuestDAOImpl implements QuestDAO {
 		return quest;
 	}
 
+	// get all the quests that match the name and are not created by the current
+	// user
 	@Override
-	public List<Quest> searchQuest(String name) {
+	public List<Quest> searchQuest(String name, int id) {
 		name = "%" + name.toLowerCase() + "%";
 		Session session = entityManager.unwrap(Session.class);
-		Query<Quest> query = session.createQuery("from Quest where lower(name) like :name and approved = 1", Quest.class);
+		Query<Quest> query = session.createQuery(
+				"from Quest where lower(name) like :name and approved = 1 and creatorId != :id", Quest.class);
 		query.setParameter("name", name);
+		query.setParameter("id", id);
 		List<Quest> quests;
 		try {
 			quests = query.getResultList();

@@ -1,6 +1,9 @@
 package com.luci.gamification.utility;
 
 public class QuestFilter {
+
+	// helper class to filter quests
+
 	private boolean submitted;
 	private boolean notSubmitted;
 	private boolean accepted;
@@ -11,6 +14,7 @@ public class QuestFilter {
 	private String acceptedString;
 	private String rejectedString;
 
+	// constructor
 	public QuestFilter() {
 		this.submitted = true;
 		this.notSubmitted = true;
@@ -21,43 +25,45 @@ public class QuestFilter {
 		acceptedString = "on";
 		rejectedString = "on";
 	}
-	
+
+	// methods to set the boolean values based on strings retrieved from the query
 	public void setSubmittedByString(String str) {
-		if(str.equals("")) {
+		if (str.equals("")) {
 			this.submitted = false;
-		} else if(str.equals("on")) {
+		} else if (str.equals("on")) {
 			this.submitted = true;
 		}
 		this.submittedString = str;
 	}
-	
-	
+
 	public void setNotSubmittedByString(String str) {
-		if(str.equals("")) {
+		if (str.equals("")) {
 			this.notSubmitted = false;
-		} else if(str.equals("on")) {
+		} else if (str.equals("on")) {
 			this.notSubmitted = true;
 		}
 		this.notSubmittedString = str;
 	}
-	
+
 	public void setAcceptedByString(String str) {
-		if(str.equals("")) {
+		if (str.equals("")) {
 			this.accepted = false;
-		} else if(str.equals("on")) {
+		} else if (str.equals("on")) {
 			this.accepted = true;
 		}
 		this.acceptedString = str;
 	}
-	
+
 	public void setRejectedByString(String str) {
-		if(str.equals("")) {
+		if (str.equals("")) {
 			this.rejected = false;
-		} else if(str.equals("on")) {
+		} else if (str.equals("on")) {
 			this.rejected = true;
 		}
 		this.rejectedString = str;
 	}
+
+	// getters and setters
 	public boolean isSubmitted() {
 		return submitted;
 	}
@@ -98,46 +104,36 @@ public class QuestFilter {
 		this.keyword = keyword;
 	}
 
-
 	public String getSubmittedString() {
 		return submittedString;
 	}
-
 
 	public void setSubmittedString(String submittedString) {
 		this.submittedString = submittedString;
 	}
 
-
 	public String getNotSubmittedString() {
 		return notSubmittedString;
 	}
-
 
 	public void setNotSubmittedString(String notSubmittedString) {
 		this.notSubmittedString = notSubmittedString;
 	}
 
-
 	public String getAcceptedString() {
 		return acceptedString;
 	}
-
 
 	public void setAcceptedString(String acceptedString) {
 		this.acceptedString = acceptedString;
 	}
 
-
 	public String getRejectedString() {
 		return rejectedString;
 	}
-
 
 	public void setRejectedString(String rejectedString) {
 		this.rejectedString = rejectedString;
 	}
 
-	
-	
 }

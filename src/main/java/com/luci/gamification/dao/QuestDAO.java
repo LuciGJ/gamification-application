@@ -7,8 +7,10 @@ import com.luci.gamification.entity.Quest;
 public interface QuestDAO {
 
 	// interface for grouping methods related to quests
-	public List<Quest> findQuestsByApproval(boolean approved);
+	public List<Quest> findQuestsByApproval(boolean approved, int id);
 
+	public List<Quest> findQuestsByApproval(boolean approved);
+	
 	public List<Quest> findQuestsByCreator(int creatorId);
 
 	public Quest findQuestById(int questId);
@@ -19,6 +21,6 @@ public interface QuestDAO {
 
 	public void delete(Quest quest);
 	
-	public List<Quest> searchQuest(String name);
+	public List<Quest> searchQuest(String name, int id);
 
 }

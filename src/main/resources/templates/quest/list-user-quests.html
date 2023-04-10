@@ -38,17 +38,18 @@
 					<th>Badge name</th>
 					<th>Badge description</th>
 					<th>Badge picture</th>
+					<th>Action</th>
 
 				</tr>
 			</thead>
 
 			<tbody>
-				<tr th:each="quest, iterStat : ${quests}">
-					<td th:if="${submissions[iterStat.index]} == 0"><a
+				<tr th:each="quest, iterStat : ${quests.content}">
+					<td th:if="${submissions.content[iterStat.index]} == 0"><a
 						class="font-weight-bold text-light"
 						th:href="@{/quest/listSubmissions(questId=${quest.id})}"
 						th:text="${quest.name}"></a></td>
-					<td th:if="${submissions[iterStat.index]} == 1"><a
+					<td th:if="${submissions.content[iterStat.index]} == 1"><a
 						class="font-weight-bold text-danger"
 						th:href="@{/quest/listSubmissions(questId=${quest.id})}"
 						th:text="${quest.name}"></a></td>
@@ -57,18 +58,52 @@
 					<td class="font-weight-bold text-light" th:text="${quest.answer}" />
 					<td class="font-weight-bold text-light" th:text="${quest.tokens}" />
 					<td class="font-weight-bold text-light"
-						th:text="${badges[iterStat.index] eq null} ? 'N/A' : ${badges[iterStat.index].name}" />
+						th:text="${badges.content[iterStat.index] eq null} ? 'N/A' : ${badges.content[iterStat.index].name}" />
 					<td class="font-weight-bold text-light"
-						th:text="${badges[iterStat.index] eq null} ? 'N/A' : ${badges[iterStat.index].description}" />
-					<td th:if="${badges[iterStat.index]} == null"
+						th:text="${badges.content[iterStat.index] eq null} ? 'N/A' : ${badges.content[iterStat.index].description}" />
+					<td th:if="${badges.content[iterStat.index]} == null"
 						class="font-weight-bold text-light" th:text="'N/A'" />
-					<td th:if="${badges[iterStat.index]} != null"><img
+					<td th:if="${badges.content[iterStat.index]} != null"><img
 						class="border border-black" width="40" height="40"
-						th:src="@{'/badge-photos/' + ${badges[iterStat.index].picture}}" />
+						th:src="@{'/badge-photos/' + ${badges.content[iterStat.index].picture}}" />
 					</td>
+					<!--delete button for admins-->
+					<td sec:authorize="hasRole('ROLE_ADMIN')"><a
+						th:href="@{/admin/deleteMyQuest(questId=${quest.id})}"
+						class="btn btn-danger btn-sm"
+						onclick="if (!(confirm('Are you sure you want to delete this quest?'))) return false">
+							Delete </a></td>
 				</tr>
 			</tbody>
 		</table>
+		<!--page navigation-->
+		<div>
+			<a th:if="${quests.totalPages > 1 and quests.number > 0}"
+				style="color: white;" th:href="@{/quest/userQuests(page = 1)}"
+				th:text="'First'"> </a> <a
+				th:if="${quests.totalPages > 1 and quests.number > 0}"
+				style="color: white;"
+				th:href="@{/quest/userQuests(page=${quests.number})}"
+				th:text="'Previous'"> </a>
+
+			<div th:if="${quests.totalPages > 0}" class="pagination"
+				style="display: inline-block;" th:each="pageNumber : ${pageNumbers}">
+				<a style="color: white;"
+					th:href="@{/quest/userQuests(page=${pageNumber})}"
+					th:text="${pageNumber}"
+					th:class="${pageNumber==quests.number + 1} ? active"></a>
+			</div>
+			<a
+				th:if="${quests.totalPages > 1 and (quests.number + 1) < quests.totalPages}"
+				style="color: white;"
+				th:href="@{/quest/userQuests(page=${quests.number + 2})}"
+				th:text="'Next'"> </a> <a
+				th:if="${quests.totalPages > 1 and (quests.number + 1) < quests.totalPages}"
+				style="color: white;"
+				th:href="@{/quest/userQuests(page=${quests.totalPages})}"
+				th:text="'Last'"> </a>
+
+		</div>
 		<hr>
 		<a class="font-weight-bold text-light" th:href="@{/quest/listQuests}">Back
 			to quests</a>

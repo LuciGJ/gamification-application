@@ -11,7 +11,7 @@ import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -69,6 +69,7 @@ public class QuestController {
 		dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
 	}
 
+	// list all approved quests not created by the current user
 	@GetMapping("/listQuests")
 	public String listQuests(Model model, Principal principal, @RequestParam("page") Optional<Integer> page,
 			@RequestParam("name") Optional<String> name, @RequestParam("submitted") Optional<String> isSubmitted,
@@ -82,6 +83,7 @@ public class QuestController {
 		String searchName = name.orElse("");
 		currentPage--;
 
+		// filter the quests
 		QuestFilter filter = new QuestFilter();
 		String submittedString = isSubmitted.orElse("");
 		String notSubmittedString = isNotSubmitted.orElse("");
@@ -97,14 +99,10 @@ public class QuestController {
 
 		model.addAttribute("filter", filter);
 
-//		Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
-//		currentPage = pageable.getPageNumber();
-//		pageSize = pageable.getPageSize();
-
-		List<Quest> questList = questService.searchQuests(searchName);
+		User user = userService.findUserByUsername(principal.getName());
+		List<Quest> questList = questService.searchQuests(searchName, user.getId());
 
 		// sort quests based on submission status
-		User user = userService.findUserByUsername(principal.getName());
 
 		List<Integer> statusList = new ArrayList<>();
 		List<Quest> quests = new ArrayList<>();
@@ -141,6 +139,9 @@ public class QuestController {
 				notSubmitted.add(quest);
 			}
 		}
+
+		// get the quests based on filter
+
 		if (filter.isNotSubmitted()) {
 			for (Quest quest : notSubmitted) {
 				quests.add(quest);
@@ -207,6 +208,7 @@ public class QuestController {
 		return "quest/list-quests";
 	}
 
+	// display a quest's details and a form to submit an answer to it
 	@GetMapping("/questDetails")
 	public String questDetails(@RequestParam("questId") int questId, Model model, Principal principal) {
 
@@ -214,6 +216,12 @@ public class QuestController {
 		List<Submission> submissions = user.getSubmissionList();
 		// get the quest by id, passed as a request parameter
 		Quest quest = questService.findQuestById(questId);
+
+		// if the user is the creator of the quest, redirect to quests list
+
+		if (user.getId() == quest.getId()) {
+			return "redirect:/quest/listQuests";
+		}
 
 		// get the quest's badge
 
@@ -244,6 +252,7 @@ public class QuestController {
 		return "quest/list-quest-details";
 	}
 
+	// list all the submissions for a quest
 	@GetMapping("/listSubmissions")
 	public String listSubmissions(@RequestParam("questId") int questId, Model model, Principal principal) {
 
@@ -293,24 +302,23 @@ public class QuestController {
 		User userToReward = userService.findUserById(submission.getSubmitId());
 		UserDetail userDetail = userToReward.getUserDetail();
 
-		// if the user is the creator of the quest do not award tokens
+		// if the user is the creator of the quest do not award
 
 		if (userToReward.getId() != quest.getCreatorId()) {
 			userDetail.setTokens(userDetail.getTokens() + quest.getTokens());
+			userDetail.setQuests(userDetail.getQuests() + 1);
+			// check if there is a badge and if there is award the user
+
+			Badge badge = badgeService.findBadgeById(quest.getBadgeId());
+
+			if (badge != null) {
+				userToReward.addBadge(badge);
+			}
+
+			// save the changes
+
+			userService.updateUser(userToReward);
 		}
-
-		userDetail.setQuests(userDetail.getQuests() + 1);
-		// check if there is a badge and if there is award the user
-
-		Badge badge = badgeService.findBadgeById(quest.getBadgeId());
-
-		if (badge != null) {
-			userToReward.addBadge(badge);
-		}
-
-		// save the changes
-
-		userService.updateUser(userToReward);
 
 		return "redirect:/quest/listSubmissions?questId=" + quest.getId();
 	}
@@ -343,6 +351,7 @@ public class QuestController {
 		return "redirect:/quest/listSubmissions?questId=" + quest.getId();
 	}
 
+	// create a new quest
 	@GetMapping("/addQuestForm")
 	public String addQuestForm(Model model, Principal principal) {
 		User user = userService.findUserByUsername(principal.getName());
@@ -356,10 +365,12 @@ public class QuestController {
 		return "quest/add-quest";
 	}
 
+	// process the quest creation form
 	@PostMapping("/createQuest")
 	public String createQuest(@Valid @ModelAttribute("quest") GamificationQuest quest, BindingResult bindingResult,
 			@Valid @ModelAttribute("badge") GamificationBadge badge, BindingResult bindingResultBadge, Model model,
-			Principal principal, @RequestParam("image") MultipartFile multipartFile) throws IOException {
+			Principal principal, @RequestParam(value = "image", required = false) MultipartFile multipartFile)
+			throws IOException {
 
 		// if there were errors doing validation display them
 		User user = userService.findUserByUsername(principal.getName());
@@ -367,7 +378,7 @@ public class QuestController {
 		String fileName = "";
 		String uploadDir = "badge-photos/";
 		GamificationBadge tempBadge = new GamificationBadge();
-		tempBadge.setActivated(badge.isActivated());
+		tempBadge.setActivated(false);
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("userDetail", userDetail);
 			return "quest/add-quest";
@@ -465,11 +476,9 @@ public class QuestController {
 				FileUploadUtil.saveFile(uploadDir, newFileName, multipartFile);
 				badgeService.update(newBadge);
 			}
-
-		}
-		if (newBadge != null) {
 			newQuest.setBadgeId(newBadge.getId());
 		}
+
 		newQuest.setCreatorId(user.getId());
 		user.addQuest(newQuest);
 		userService.updateUser(user);
@@ -479,6 +488,7 @@ public class QuestController {
 
 	}
 
+	// process a submission to a quest
 	@PostMapping("/submissionProcess")
 	public String submissionProcess(@Valid @ModelAttribute("submission") GamificationSubmission submission,
 			BindingResult bindingResult, Model model) {
@@ -520,12 +530,17 @@ public class QuestController {
 
 	}
 
+	// display all the submissions related to the current user
 	@GetMapping("/userSubmissions")
-	public String userSubmissions(Model model, Principal principal) {
+	public String userSubmissions(Model model, Principal principal, @RequestParam("page") Optional<Integer> page) {
 		User user = userService.findUserByUsername(principal.getName());
 
 		List<Submission> submissions = user.getSubmissionList();
 		List<Quest> quests = new ArrayList<>();
+
+		if (submissions == null) {
+			submissions = new ArrayList<>();
+		}
 
 		// populate the list with the quests from user's submissions
 
@@ -541,18 +556,48 @@ public class QuestController {
 			quests.add(quest);
 		}
 
-		model.addAttribute("quests", quests);
-		if (submissions == null) {
-			model.addAttribute("submissions", new ArrayList<Submission>());
+		// get the current page
+
+		int currentPage = page.orElse(1);
+		int pageSize = 10;
+		currentPage--;
+
+		// get the elements on the current page
+
+		int startItem = currentPage * pageSize;
+		List<Quest> questsOnPage;
+		List<Submission> submissionsOnPage;
+		if (quests.size() < startItem) {
+			questsOnPage = new ArrayList<>();
+			submissionsOnPage = new ArrayList<>();
 		} else {
-			model.addAttribute("submissions", submissions);
+			int toIndex = Math.min(startItem + pageSize, quests.size());
+			questsOnPage = quests.subList(startItem, toIndex);
+			submissionsOnPage = submissions.subList(startItem, toIndex);
+
 		}
+		Page<Quest> questPage = new PageImpl<Quest>(questsOnPage, PageRequest.of(currentPage, pageSize), quests.size());
+		Page<Submission> submissionsPage = new PageImpl<Submission>(submissionsOnPage,
+				PageRequest.of(currentPage, pageSize), submissions.size());
+		int totalPages = questPage.getTotalPages();
+
+		if (totalPages > 0) {
+			List<Integer> pageNumbers = new ArrayList<>();
+			for (int i = 1; i <= totalPages; i++) {
+				pageNumbers.add(i);
+			}
+			model.addAttribute("pageNumbers", pageNumbers);
+		}
+
+		model.addAttribute("quests", questPage);
+		model.addAttribute("submissions", submissionsPage);
 
 		return "quest/list-user-submissions";
 	}
 
+	// display all the quests created by the current user
 	@GetMapping("/userQuests")
-	public String userQuest(Model model, Principal principal) {
+	public String userQuest(Model model, Principal principal, @RequestParam("page") Optional<Integer> page) {
 		User user = userService.findUserByUsername(principal.getName());
 
 		List<Quest> quests = user.getQuestList();
@@ -560,7 +605,8 @@ public class QuestController {
 		List<Integer> submissions = new ArrayList<>();
 		List<Quest> questsWithSubmissions = new ArrayList<>();
 		List<Quest> questsWithoutSubmissions = new ArrayList<>();
-		// populate the list with the badges from user's quests
+
+		// sort the quests based on whether they have active submissions or not
 
 		for (Quest quest : quests) {
 			if (!submissionService.findSubmissionsByQuest(quest.getId()).isEmpty()) {
@@ -583,9 +629,46 @@ public class QuestController {
 			submissions.add(0);
 		}
 
-		model.addAttribute("quests", sortedQuests);
-		model.addAttribute("badges", badges);
-		model.addAttribute("submissions", submissions);
+		// get current page
+
+		int currentPage = page.orElse(1);
+		int pageSize = 10;
+		currentPage--;
+
+		// create page
+
+		int startItem = currentPage * pageSize;
+		List<Quest> questsOnPage;
+		List<Integer> submissionsOnPage;
+		List<Badge> badgesOnPage;
+		if (quests.size() < startItem) {
+			questsOnPage = new ArrayList<>();
+			submissionsOnPage = new ArrayList<>();
+			badgesOnPage = new ArrayList<>();
+		} else {
+			int toIndex = Math.min(startItem + pageSize, quests.size());
+			questsOnPage = quests.subList(startItem, toIndex);
+			submissionsOnPage = submissions.subList(startItem, toIndex);
+			badgesOnPage = badges.subList(startItem, toIndex);
+		}
+		Page<Quest> questPage = new PageImpl<Quest>(questsOnPage, PageRequest.of(currentPage, pageSize), quests.size());
+		Page<Integer> submissionPage = new PageImpl<Integer>(submissionsOnPage, PageRequest.of(currentPage, pageSize),
+				submissions.size());
+		Page<Badge> badgePage = new PageImpl<Badge>(badgesOnPage, PageRequest.of(currentPage, pageSize), badges.size());
+
+		int totalPages = questPage.getTotalPages();
+
+		if (totalPages > 0) {
+			List<Integer> pageNumbers = new ArrayList<>();
+			for (int i = 1; i <= totalPages; i++) {
+				pageNumbers.add(i);
+			}
+			model.addAttribute("pageNumbers", pageNumbers);
+		}
+
+		model.addAttribute("quests", questPage);
+		model.addAttribute("badges", badgePage);
+		model.addAttribute("submissions", submissionPage);
 
 		return "quest/list-user-quests";
 	}

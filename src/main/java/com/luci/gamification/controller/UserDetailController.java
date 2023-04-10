@@ -159,6 +159,7 @@ public class UserDetailController {
 		return "redirect:/userdata/uploadPictureForm";
 	}
 
+	// display all the badges for the current user
 	@GetMapping("/badges")
 	public String badges(Model model, Principal principal) {
 		User user = userService.findUserByUsername(principal.getName());

@@ -12,7 +12,6 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.luci.gamification.entity.Quest;
 import com.luci.gamification.entity.User;
 import com.luci.gamification.entity.UserDetail;
 
@@ -226,7 +225,7 @@ public class UserDAOImpl implements UserDAO {
 		return user;
 	}
 
-
+	// get the users based on their completed quests number in reverse order
 	@Override
 	public List<UserDetail> getUsersByQuests() {
 		Session session = entityManager.unwrap(Session.class);

@@ -22,10 +22,7 @@
 	<div style="margin-left: 20%; margin-top: 5%;"
 		class="mainbox col-md-7 col-md-offset-6 col-sm-10 col-sm-offset-6 border border-black bg-success">
 
-		<a th:if="${quest.creatorId} == ${submission.userId}"
-			class="btn btn-primary col-2"
-			th:href="@{/quest/listSubmissions(questId=${quest.id})}"
-			th:text="Submissions"></a>
+
 
 		<!-- Display quest information -->
 

@@ -39,13 +39,13 @@
 			</thead>
 
 			<tbody>
-				<tr th:each="submission, iterStat: ${submissions}">
+				<tr th:each="submission, iterStat: ${submissions.content}">
 
-					<td><a th:if="${quests[iterStat.index].id} != -1"
+					<td><a th:if="${quests.content[iterStat.index].id} != -1"
 						class="font-weight-bold text-light"
-						th:href="@{/quest/questDetails(questId=${quests[iterStat.index].id})}"
-						th:text="${quests[iterStat.index].name}"></a>
-						<p th:if="${quests[iterStat.index].id} == -1"
+						th:href="@{/quest/questDetails(questId=${quests.content[iterStat.index].id})}"
+						th:text="${quests.content[iterStat.index].name}"></a>
+						<p th:if="${quests.content[iterStat.index].id} == -1"
 							class="font-weight-bold text-light">N/A</p></td>
 
 					<td class="font-weight-bold text-light"
@@ -64,6 +64,35 @@
 				</tr>
 			</tbody>
 		</table>
+
+		<!--page navigation-->
+		<div>
+			<a th:if="${quests.totalPages > 1 and quests.number > 0}"
+				style="color: white;" th:href="@{/quest/userSubmissions(page = 1)}"
+				th:text="'First'"> </a> <a
+				th:if="${quests.totalPages > 1 and quests.number > 0}"
+				style="color: white;"
+				th:href="@{/quest/userSubmissions(page=${quests.number})}"
+				th:text="'Previous'"> </a>
+
+			<div th:if="${quests.totalPages > 0}" class="pagination"
+				style="display: inline-block;" th:each="pageNumber : ${pageNumbers}">
+				<a style="color: white;"
+					th:href="@{/quest/userSubmissions(page=${pageNumber})}"
+					th:text="${pageNumber}"
+					th:class="${pageNumber==quests.number + 1} ? active"></a>
+			</div>
+			<a
+				th:if="${quests.totalPages > 1 and (quests.number + 1) < quests.totalPages}"
+				style="color: white;"
+				th:href="@{/quest/userSubmissions(page=${quests.number + 2})}"
+				th:text="'Next'"> </a> <a
+				th:if="${quests.totalPages > 1 and (quests.number + 1) < quests.totalPages}"
+				style="color: white;"
+				th:href="@{/quest/userSubmissions(page=${quests.totalPages})}"
+				th:text="'Last'"> </a>
+
+		</div>
 		<hr>
 		<a class="font-weight-bold text-light" th:href="@{/quest/listQuests}">Back
 			to quests</a>

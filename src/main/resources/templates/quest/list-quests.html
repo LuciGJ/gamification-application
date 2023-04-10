@@ -83,7 +83,7 @@
 						<p style="color: red;" th:case="2">Rejected</p>
 
 					</td>
-
+					<!--delete button for admins-->
 					<td sec:authorize="hasRole('ROLE_ADMIN')"><a
 						th:href="@{/admin/deleteQuest(questId=${quest.id})}"
 						class="btn btn-danger btn-sm"
@@ -115,8 +115,7 @@
 				th:if="${quests.totalPages > 1 and (quests.number + 1) < quests.totalPages}"
 				style="color: white;"
 				th:href="@{/quest/listQuests(page=${quests.number + 2}, name=${filter.keyword}, accepted=${filter.acceptedString}, rejected=${filter.rejectedString}, submitted=${filter.submittedString}, notSubmitted=${filter.notSubmittedString})}"
-				th:text="'Next'"> </a>
-			<a
+				th:text="'Next'"> </a> <a
 				th:if="${quests.totalPages > 1 and (quests.number + 1) < quests.totalPages}"
 				style="color: white;"
 				th:href="@{/quest/listQuests(page=${quests.totalPages}, name=${filter.keyword}, accepted=${filter.acceptedString}, rejected=${filter.rejectedString}, submitted=${filter.submittedString}, notSubmitted=${filter.notSubmittedString})}"

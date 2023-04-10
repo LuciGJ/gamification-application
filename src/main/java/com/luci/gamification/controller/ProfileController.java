@@ -17,6 +17,8 @@ import com.luci.gamification.service.UserService;
 @RequestMapping("/profile")
 public class ProfileController {
 
+	// controller used to display an user's profile
+
 	@Autowired
 	UserService userService;
 

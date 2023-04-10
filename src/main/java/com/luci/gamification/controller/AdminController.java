@@ -41,6 +41,7 @@ public class AdminController {
 		return "admin/administration-page";
 	}
 
+	// display all the quests that are not approved
 	@GetMapping("/submissionsPage")
 	public String submissionsPage(Model model) {
 		List<Quest> questList = questService.findQuestsByApproval(false);
@@ -106,7 +107,19 @@ public class AdminController {
 		// get the quest by id, which is passed as a request parameter
 		Quest quest = questService.findQuestById(questId);
 
+		// approve the quest
+
 		quest.setApproved(1);
+
+		// if the quest has a badge, reward the creator
+
+		Badge badge = badgeService.findBadgeById(quest.getBadgeId());
+
+		if (badge != null) {
+			User user = userService.findUserById(quest.getCreatorId());
+			user.addBadge(badge);
+			userService.updateUser(user);
+		}
 
 		questService.update(quest);
 
@@ -127,6 +140,8 @@ public class AdminController {
 
 		userDetail.setTokens(userDetail.getTokens() + quest.getTokens());
 
+		// if the quest has a badge, delete it
+
 		Badge badge = badgeService.findBadgeById(quest.getBadgeId());
 
 		if (badge != null) {
@@ -140,6 +155,8 @@ public class AdminController {
 		return "redirect:/admin/submissionsPage";
 	}
 
+	// delete the quest from the quests list
+
 	@GetMapping("/deleteQuest")
 	public String deleteQuest(@RequestParam("questId") int questId) {
 
@@ -149,6 +166,19 @@ public class AdminController {
 		questService.delete(quest);
 
 		return "redirect:/quest/listQuests";
+	}
+
+	// delete the quest from the user's quests list
+
+	@GetMapping("/deleteMyQuest")
+	public String deleteMyQuest(@RequestParam("questId") int questId) {
+
+		// get the quest by id, which is passed as a request parameter
+		Quest quest = questService.findQuestById(questId);
+
+		questService.delete(quest);
+
+		return "redirect:/quest/userQuests";
 	}
 
 }

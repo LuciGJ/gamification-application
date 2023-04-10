@@ -36,9 +36,9 @@
 			</thead>
 
 			<tbody>
-				<tr th:each="user, iterStat : ${users}">
+				<tr th:each="user, iterStat : ${users.content}">
 					<td class="font-weight-bold text-light"
-						th:text="${rankings[iterStat.index]}" />
+						th:text="${rankings.content[iterStat.index]}" />
 					<td><a class="font-weight-bold text-light"
 						th:href="@{/profile/viewProfile(displayName=${user.displayName})}"
 						th:text="${user.displayName}"></a></td>
@@ -46,6 +46,37 @@
 				</tr>
 			</tbody>
 		</table>
+		<!--page navigation-->
+		<div>
+			<a th:if="${users.totalPages > 1 and users.number > 0}"
+				style="color: white;"
+				th:href="@{/leaderboard/viewLeaderboard(page = 1)}"
+				th:text="'First'"> </a> <a
+				th:if="${users.totalPages > 1 and users.number > 0}"
+				style="color: white;"
+				th:href="@{/leaderboard/viewLeaderboard(page=${users.number})}"
+				th:text="'Previous'"> </a>
+
+			<div th:if="${users.totalPages > 0}" class="pagination"
+				style="display: inline-block;" th:each="pageNumber : ${pageNumbers}">
+				<a style="color: white;"
+					th:href="@{/leaderboard/viewLeaderboard(page=${pageNumber})}"
+					th:text="${pageNumber}"
+					th:class="${pageNumber==users.number + 1} ? active"></a>
+			</div>
+			<a
+				th:if="${users.totalPages > 1 and (users.number + 1) < users.totalPages}"
+				style="color: white;"
+				th:href="@{/leaderboard/viewLeaderboard(page=${users.number + 2})}"
+				th:text="'Next'"> </a>
+			<a
+				th:if="${users.totalPages > 1 and (users.number + 1) < users.totalPages}"
+				style="color: white;"
+				th:href="@{/leaderboard/viewLeaderboard(page=${users.totalPages})}"
+				th:text="'Last'"> </a>
+
+		</div>
+
 		<hr>
 		<a class="font-weight-bold text-light" th:href="@{/menu}">Back to
 			menu</a>

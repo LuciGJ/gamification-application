@@ -647,7 +647,7 @@ public class QuestController {
 			badgesOnPage = new ArrayList<>();
 		} else {
 			int toIndex = Math.min(startItem + pageSize, quests.size());
-			questsOnPage = quests.subList(startItem, toIndex);
+			questsOnPage = sortedQuests.subList(startItem, toIndex);
 			submissionsOnPage = submissions.subList(startItem, toIndex);
 			badgesOnPage = badges.subList(startItem, toIndex);
 		}

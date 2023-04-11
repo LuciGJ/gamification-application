@@ -219,7 +219,7 @@ public class QuestController {
 
 		// if the user is the creator of the quest, redirect to quests list
 
-		if (user.getId() == quest.getId()) {
+		if (user.getId() == quest.getCreatorId()) {
 			return "redirect:/quest/listQuests";
 		}
 

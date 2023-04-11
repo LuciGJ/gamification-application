@@ -96,7 +96,7 @@ public class AccountManagementController {
 
 		details.setRecipient(user.getEmail());
 		details.setMsgBody("Click the following link to change your email address: \n " + changeEmailLink);
-		details.setSubject("CV Generator change email");
+		details.setSubject("Gamification change email");
 
 		emailService.sendEmail(details);
 		model.addAttribute("message", "An email has been sent to confirm your identity.");

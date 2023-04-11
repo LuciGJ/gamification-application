@@ -38,7 +38,7 @@
 					<th>Badge name</th>
 					<th>Badge description</th>
 					<th>Badge picture</th>
-					<th>Action</th>
+					<th sec:authorize="hasRole('ROLE_ADMIN')">Action</th>
 
 				</tr>
 			</thead>

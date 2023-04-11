@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.luci.gamification.entity.Badge;
-import com.luci.gamification.entity.Quest;
 import com.luci.gamification.entity.UserDetail;
 import com.luci.gamification.service.BadgeService;
 import com.luci.gamification.service.UserService;

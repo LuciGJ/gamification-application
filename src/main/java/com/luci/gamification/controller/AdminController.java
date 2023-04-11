@@ -136,17 +136,20 @@ public class AdminController {
 
 		UserDetail userDetail = userService.findDetailById(quest.getCreatorId());
 
-		// refund tokens to user
-
-		userDetail.setTokens(userDetail.getTokens() + quest.getTokens());
-
 		// if the quest has a badge, delete it
 
 		Badge badge = badgeService.findBadgeById(quest.getBadgeId());
 
+		int tokens = quest.getTokens();
+
 		if (badge != null) {
 			badgeService.delete(badge);
+			tokens += 100;
 		}
+
+		// refund tokens to user
+
+		userDetail.setTokens(userDetail.getTokens() + tokens);
 
 		questService.delete(quest);
 

@@ -61,7 +61,10 @@ public class UserServiceImpl implements UserService {
 		newUser.setEmail(user.getEmail());
 		UserDetail userDetail = new UserDetail();
 		userDetail.setImage("default.png");
-		userDetail.setDisplayName(user.getUsername());
+		int id = getLastUserId();
+		id++;
+		String username = "User" + id;
+		userDetail.setDisplayName(username);
 		userDetail.setQuests(0);
 		userDetail.setTokens(0);
 		newUser.setUserDetail(userDetail);
@@ -248,6 +251,12 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<UserDetail> getUsersByQuests() {
 		return userDAO.getUsersByQuests();
+	}
+
+	@Transactional
+	@Override
+	public int getLastUserId() {
+		return userDAO.getLastUserId();
 	}
 
 }

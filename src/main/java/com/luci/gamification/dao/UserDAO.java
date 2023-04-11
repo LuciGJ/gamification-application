@@ -36,6 +36,7 @@ public interface UserDAO {
 
 	public UserDetail findDetailById(int id);
 
+	public int getLastUserId();
 
 	public List<UserDetail> getUsersByQuests();
 }

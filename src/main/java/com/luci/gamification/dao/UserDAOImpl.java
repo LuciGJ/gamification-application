@@ -240,4 +240,18 @@ public class UserDAOImpl implements UserDAO {
 		return users;
 	}
 
+	@Override
+	public int getLastUserId() {
+		Session session = entityManager.unwrap(Session.class);
+		Query<Integer> query = session.createQuery("select max(id) from User", Integer.class);
+		int id;
+		try {
+			id = query.getSingleResult();
+		} catch (Exception e) {
+			id = 0;
+		}
+
+		return id;
+	}
+
 }
